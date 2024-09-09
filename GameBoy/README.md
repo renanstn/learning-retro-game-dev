@@ -35,6 +35,7 @@ Fluxo de compilação:
 ```shell
 sudo apt install default-jre
 java -jar Emulicious.jar
+java -jar Emulicious.jar /home/renan/GitHub/learning-retro-game-dev/GameBoy/unbricked/unbricked.gb
 ```
 
 - Abri o arquivo gerado pelo compilador e **funcionou** :D
@@ -58,7 +59,7 @@ rgblink -n hello-world.sym hello-world.o
 
 ## Armazenamento de tiles
 
-### Referências: 
+### Referências
 
 - https://www.youtube.com/watch?v=txkHN6izK2Y
 - https://www.huderlem.com/demos/gameboy2bpp.html
@@ -67,6 +68,29 @@ rgblink -n hello-world.sym hello-world.o
 - Cada pixel usa um valor de 0 a 3 para indicar sua paleta de cor (branco, cinza, cinza escuro, preto)
 - 2 bits for pixel (2bpp)
 - Esses 2 bits por pixel são divididos no armazenamento
-	- Um grupo é criado com os valores da "esquerda"
-	- Um grupo é criado com os valores da "direita"
-	- Ai fica armazenado primeiro os da direita, depois os da esquerda
+  - Um grupo é criado com os valores da "esquerda"
+  - Um grupo é criado com os valores da "direita"
+  - Ai fica armazenado primeiro os da direita, depois os da esquerda
+
+## Part II
+
+### Objects
+
+- Objetos se movem em cima do background.
+- Objetos são compostos de um ou dois tiles, ou seja
+  - 8x8
+  - 8x16
+- Objetos são armazenados na `OAM` (object attribute memory)
+- Objetos consistem em:
+  - Posição na tela
+  - Tile ID
+  - Atributos
+- Armazenados em 4 bytes
+  - Um para a posição Y
+  - Um para a posição X
+  - Um para o tile ID
+  - Um para os atributos
+- A OAM tem 160 bytes, então logo, cabem 40 objetos ali (160/4=40)
+
+> Os bytes que armazenam as coordenadas Y e X na verdade **não se referem a
+> coordenada exata na tela**, o valor X na verdade é _X-8_, e o valor Y é _Y-16_.
