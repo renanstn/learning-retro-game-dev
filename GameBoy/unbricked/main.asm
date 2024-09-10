@@ -138,7 +138,8 @@ BounceOnRight:
     sub a, 16
     ld c, a
     ld a, [_OAMRAM + 5]
-    sub a, 8 - 1
+    ; sub a, 8 - 1
+    sub a, 8 - 6 ; I added a bit more offset to right collision
     ld b, a
     call GetTileByPixel ; Returns tile address in 'hl'
     ld a, [hl]
@@ -182,6 +183,7 @@ BounceDone:
     ld a, [_OAMRAM]
     ld b, a
     ld a, [_OAMRAM + 4]
+    add a, 6 ; A little offset considering the ball collision dot at the top
     cp a, b
     jp nz, PaddleBounceDone ; If the ball isn't at the same Y position as the paddle, ignore
 
