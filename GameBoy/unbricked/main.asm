@@ -247,11 +247,12 @@ Right:
     ld [wFrameCounter], a
 
     ; Move the paddle one pixel to the right
-    ld a, [_OAMRAM + 1]
-    inc a
-    ld [_OAMRAM + 1], a
-    jp Main
+    ; ld a, [_OAMRAM + 1]
+    ; inc a
+    ; ld [_OAMRAM + 1], a
+    ; jp Main
 
+; =============================================================================
 ; Copy bytes from one area to another.
 ; @param de: Source
 ; @param hl: Destination
@@ -354,6 +355,8 @@ UpdateKeys:
 
 .knownret
     ret
+
+; =============================================================================
 
 Tiles:
 	dw `33333333
@@ -612,9 +615,11 @@ Ball:
     dw `00000000
 BallEnd:
 
+; =============================================================================
 ; Work RAM, we can create variables here --------------------------------------
+; FYI: db = 'define byte'
 SECTION "Counter", WRAM0
-wFrameCounter: db ; db = 'define byte'
+wFrameCounter: db
 ; /\ We will use this to count how many frames passed since last movement
 
 SECTION "Input Variables", WRAM0
