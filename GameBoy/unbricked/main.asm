@@ -68,6 +68,8 @@ ClearOam:
     ; Initialize global variables ---------------------------------------------
     ld a, 0
     ld [wFrameCounter], a
+    ld [wCurKeys], a
+    ld [wNewKeys], a
 
 Main:
     ; Wait until it's *not* VBlank
@@ -78,6 +80,40 @@ WaitVBlank2:
     ld a, [rLY]
     cp 144
     jp c, WaitVBlank2
+
+    ; Check keys pressed ------------------------------------------------------
+    ; Check the current keys every frame and move left or right
+    call UpdateKeys
+
+; First, check if the left button is pressed
+CheckLeft:
+    ld a, [wCurKeys]
+    and a, PADF_LEFT
+    jp z, CheckRight
+Left:
+    ; Move the paddle one pixel to the left
+    ld a, [_OAMRAM + 1]
+    dec a
+    ; If we already hit the edge of the playfield, don't move
+    cp a, 15
+    jp z, Main
+    ld [_OAMRAM + 1], a
+    jp Main
+
+; Now check the if the right button is pressed
+CheckRight:
+    ld a, [wCurKeys]
+    and a, PADF_RIGHT
+    jp z, Main
+Right:
+    ; Move the paddle one pixel to the right
+    ld a, [_OAMRAM + 1]
+    inc a
+    ; If we already hit the edge of the playfield, don't move
+    cp a, 105
+    jp z, Main
+    ld [_OAMRAM + 1], a
+    jp Main
 
     ; Frame counter -----------------------------------------------------------
     ld a, [wFrameCounter]
@@ -108,6 +144,44 @@ Memcopy:
     ld a, b
     or a, c
     jp nz, Memcopy
+    ret
+
+; Read player input -----------------------------------------------------------
+UpdateKeys:
+    ; Poll half the controller (buttons A, B, start, select)
+    ld a, P1F_GET_BTN
+    call .onenibble
+    ld b, a     ; B7-4 = 1; B3-0 = unpressed buttons
+
+    ; Poll the other half (directions buttons)
+    ld a, P1F_GET_DPAD
+    call .onenibble
+    swap a      ; A3-0 = unpressed directions; A7-4 = 1
+    xor a, b    ; A = pressed buttons + directions
+    ld b, a     ; B = pressed buttons + directions
+
+    ; And release the controller
+    ld a, P1F_GET_NONE
+    ldh [rP1], a
+
+    ; Combine with previous wCurrKeys to make wNewKeys
+    ld a, [wCurKeys]
+    xor a, b    ; A = keys that changed state
+    and a, b    ; A = keys that changed to pressed
+    ld [wNewKeys], a
+    ld a, b
+    ld [wCurKeys], a
+    ret
+
+.onenibble
+    ldh [rP1], a    ; Switch the key matrix
+    call .knownret  ; Burn 10 cycles calling a known ret
+    ldh a, [rP1]    ; Ignore value while waiting for the key matrix to settle
+    ldh a, [rP1]
+    ldh a, [rP1]    ; This read counts
+    or a, $F0       ; A7-4 = 1; A3-0 = unpressed keys
+
+.knownret
     ret
 
 Tiles:
@@ -358,5 +432,9 @@ PaddleEnd:
 
 ; Work RAM, we can create variables here --------------------------------------
 SECTION "Counter", WRAM0
-wFrameCounter: db
+wFrameCounter: db ; db = 'define byte'
 ; /\ We will use this to count how many frames passed since last movement
+
+SECTION "Input Variables", WRAM0
+wCurKeys: db
+wNewKeys: db
