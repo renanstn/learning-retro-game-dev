@@ -490,7 +490,7 @@ Tiles:
 	dw `23232323
 	dw `33333333
 
-	; Paste your logo here:
+	; Duck image (logo)
 	dw `22222222
 	dw `22222222
 	dw `22222222
@@ -619,7 +619,6 @@ Tiles:
 	dw `00222222
 	dw `00222222
 	dw `22222222
-
 TilesEnd:
 
 Tilemap:
