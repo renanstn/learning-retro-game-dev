@@ -1,5 +1,9 @@
 # Playing sounds
 
+## Reference
+
+https://gbdev.io/pandocs/Audio_Registers.html
+
 Activate sound channel
 
 ```asm
