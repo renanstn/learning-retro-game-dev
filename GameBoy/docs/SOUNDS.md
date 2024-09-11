@@ -1,11 +1,11 @@
-# Playing sounds
+# Sounds
 
-## References
+## Referências
 
 - https://gbdev.io/pandocs/Audio_Registers.html
 - https://gbdev.gg8.se/wiki/articles/Gameboy_sound_hardware
 
-Activate sound channel
+Ativando o canal de som
 
 ```asm
     ; Activate sound on channel 1
@@ -13,7 +13,7 @@ Activate sound channel
     ldh [rNR52], a
 ```
 
-Play a simple "bounce" sound
+Tocando um som simples de 'boing'
 
 ```asm
     ; Configure frequency sweep
