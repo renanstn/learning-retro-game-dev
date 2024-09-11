@@ -86,6 +86,10 @@ ClearOam:
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON
     ld [rLCDC], a
 
+    ; Activate sound on channel 1 ---------------------------------------------
+    ld a, %10000001
+    ldh [rNR52], a
+
     ; During the first (black) frame, initialize display registers
     ld a, %11100100
     ld [rBGP], a
@@ -209,6 +213,22 @@ BounceDone:
 
     ld a, -1
     ld [wBallMomentumY], a
+
+    ; Play a sound ------------------------------------------------------------
+    ; Configure frequency sweep
+    ld a, %00010110
+    ldh [rNR10], a
+    ; Configure duty cycle and wave length
+    ld a, %10100000
+    ldh [rNR11], a
+    ; Configure volume envelope
+    ld a, %11110000
+    ldh [rNR12], a
+    ; Configure frequency
+    ld a, $00
+    ldh [rNR13], a
+    ld a, $c3
+    ldh [rNR14], a
 
 PaddleBounceDone:
 
