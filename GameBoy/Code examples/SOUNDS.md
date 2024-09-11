@@ -1,8 +1,9 @@
 # Playing sounds
 
-## Reference
+## References
 
-https://gbdev.io/pandocs/Audio_Registers.html
+- https://gbdev.io/pandocs/Audio_Registers.html
+- https://gbdev.gg8.se/wiki/articles/Gameboy_sound_hardware
 
 Activate sound channel
 
