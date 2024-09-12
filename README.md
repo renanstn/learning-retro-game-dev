@@ -1,6 +1,6 @@
 # learning-retro-game-dev
 
-Repositório que visa centralizar meus estudos sobre desenvolvimento de jogos
+Repositório para centralizar meus estudos sobre desenvolvimento de jogos
 em plataformas antigas como GBA, NES e SNES.
 
 ## Game Boy
@@ -10,11 +10,11 @@ em plataformas antigas como GBA, NES e SNES.
 
 ## NES
 
-- Vem ai
+- Vem ai...
 
 ## SNES
 
-- Vem ai
+- Vem ai...
 
 ## Extensões úteis de VS Code
 
