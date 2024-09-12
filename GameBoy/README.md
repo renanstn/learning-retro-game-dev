@@ -11,6 +11,17 @@ CPU code reference: https://rgbds.gbdev.io/docs/v0.8.0/gbz80.7
 - https://rgbds.gbdev.io/install
 - https://github.com/gbdev/rgbds
 
+### O emulador
+
+- Baixei o emulador [Emulicious](https://emulicious.net/downloads/)
+- Instalei o `default-jre` (java) para conseguir executar o emulador
+
+```shell
+sudo apt install default-jre
+java -jar Emulicious.jar
+java -jar Emulicious.jar /home/renan/GitHub/learning-retro-game-dev/GameBoy/unbricked/unbricked.gb
+```
+
 ## Hello world
 
 Fonte: https://gbdev.io/gb-asm-tutorial/part1/hello_world.html
@@ -29,18 +40,9 @@ Fluxo de compilação:
 
 > Source code → rgbasm → Object files → rgblink → “Raw” ROM → rgbfix → “Fixed” ROM. Good.
 
-- Baixei o emulador [Emulicious](https://emulicious.net/downloads/)
-- Instalei o `default-jre` para conseguir executar o emulador
-
-```shell
-sudo apt install default-jre
-java -jar Emulicious.jar
-java -jar Emulicious.jar /home/renan/GitHub/learning-retro-game-dev/GameBoy/unbricked/unbricked.gb
-```
-
 - Abri o arquivo gerado pelo compilador e **funcionou** :D
 
-In RGBDS assembly, the hexadecimal prefix is `$`, and the binary prefix is `%`.
+> In RGBDS assembly, the hexadecimal prefix is `$`, and the binary prefix is `%`.
 
 ROM: Memória que não pode ser escrita.
 RAM: Memória que pode ser escrita.
