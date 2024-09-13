@@ -33,12 +33,15 @@ O `Tilemap` deve obrigatoriamente ser uma linha de
 
 ### Reduzindo a quantidade de cores de uma imagem:
 
-Para se adequar a paleta de cores do Game Boy
-
 ```sh
 sudo apt install imagemagick
 ```
 
 ```sh
 convert input.png -colors 4 output.png
+```
+### Completado a imagem para ocupar a tela toda
+
+```sh
+convert input.png -background white -gravity center -extent 160x144 output.png
 ```
