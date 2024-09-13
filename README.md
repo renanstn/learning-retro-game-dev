@@ -22,4 +22,5 @@ em plataformas antigas como GBA, NES e SNES.
 
 ## Ferramentas online
 
+- Piskel: https://www.piskelapp.com/
 - Tilemap editor: https://www.spritefusion.com
