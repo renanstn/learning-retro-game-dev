@@ -31,6 +31,12 @@ O `Tilemap` deve obrigatoriamente ser uma linha de
 
 ## Scripts úteis
 
+### Conferindo as dimensões de um arquivo
+
+```sh
+identify input.png
+```
+
 ### Reduzindo a quantidade de cores de uma imagem:
 
 ```sh
