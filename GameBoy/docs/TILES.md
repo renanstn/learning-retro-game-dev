@@ -43,5 +43,5 @@ convert input.png -colors 4 output.png
 ### Completado a imagem para ocupar a tela toda
 
 ```sh
-convert input.png -background white -gravity center -extent 160x144 output.png
+convert input.png -background white -gravity NorthWest -extent 160x144 output.png
 ```
