@@ -48,7 +48,7 @@ convert input.png -background white -gravity NorthWest -extent 160x144 output.pn
 
 ### Gerando os tiles + tilemap
 
-> Precisa ser uma imagem de 256x256 para
+> Precisa ser uma imagem de **256x256**!!!
 
 ```sh
 rgbgfx -u in.png -o out.2bpp -t out.tilemap
