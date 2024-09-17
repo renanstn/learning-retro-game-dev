@@ -36,14 +36,22 @@ identify input.png
 sudo apt install imagemagick
 ```
 
+Converter a imagem para uma paleta de 4 cores
+
 ```sh
-convert input.png -colors 4 output.png
+convert berg-48x64.png -colors 4 berg-4-colors.png
+```
+
+Converter a imagem para uma paleta de 4 cores regulando brilho e contraste
+
+```sh
+convert berg-48x64.png -colors 4 -brightness-contrast 50x0 berg-4-colors.png
 ```
 
 ### Completado a imagem para ocupar a tela toda
 
 ```sh
-convert input.png -background white -gravity NorthWest -extent 160x144 output.png
+convert berg-4-colors.png -background white -gravity NorthWest -extent 256x256 berg-screen.png
 ```
 
 ### Gerando os tiles + tilemap
@@ -51,5 +59,11 @@ convert input.png -background white -gravity NorthWest -extent 160x144 output.pn
 > Precisa ser uma imagem de **256x256**!!!
 
 ```sh
-rgbgfx -u in.png -o out.2bpp -t out.tilemap
+rgbgfx -u berg-screen.png -o berg.2bpp -t berg.tilemap
+```
+
+### Gerar tilemap das letras
+
+```sh
+rgbgfx text-font-inverted.png -c "#FFFFFF,#cbcbcb,#414141,#000000;" -o letters.2bpp
 ```
