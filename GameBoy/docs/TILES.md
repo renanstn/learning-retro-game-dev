@@ -32,6 +32,12 @@ O `Tilemap` deve obrigatoriamente ser um bloco de
 
 ## Scripts úteis
 
+Todos os scripts utilizam a ferramenta de CLI [ImageMacick](https://imagemagick.org/index.php).
+
+```sh
+sudo apt install imagemagick
+```
+
 ### Conferindo as dimensões de um arquivo
 
 ```sh
@@ -39,10 +45,6 @@ identify input.png
 ```
 
 ### Reduzindo a quantidade de cores de uma imagem:
-
-```sh
-sudo apt install imagemagick
-```
 
 Converter a imagem para uma paleta de 4 cores
 
