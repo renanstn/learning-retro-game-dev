@@ -1,5 +1,7 @@
 # Game Boy
 
+> Mais anotações sobre temas específicos foram salvos na pasta [docs](docs/)
+
 Fonte: https://gbdev.io/gb-asm-tutorial/index.html
 
 CPU code reference: https://rgbds.gbdev.io/docs/v0.8.0/gbz80.7
