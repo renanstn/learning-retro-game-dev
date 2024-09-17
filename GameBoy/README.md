@@ -8,17 +8,24 @@ CPU code reference: https://rgbds.gbdev.io/docs/v0.8.0/gbz80.7
 
 ### O compilador
 
+O compilador utilizado é o **RGBDS**. 
+Ele já vem com várias ferramentas úteis como o RGBFIX para validar as roms e o RGBGFX para conversão de sprites.
+
 - https://rgbds.gbdev.io/install
 - https://github.com/gbdev/rgbds
 
 ### O emulador
+
+O emulador utilizado é o Emulicious, pois vem com um bom debugger.
 
 - Baixei o emulador [Emulicious](https://emulicious.net/downloads/)
 - Instalei o `default-jre` (java) para conseguir executar o emulador
 
 ```shell
 sudo apt install default-jre
+# Abrir o emulador
 java -jar Emulicious.jar
+# Abrir o emulador passando o path da rom para maior praticidade
 java -jar Emulicious.jar /home/renan/GitHub/learning-retro-game-dev/GameBoy/unbricked/unbricked.gb
 ```
 
