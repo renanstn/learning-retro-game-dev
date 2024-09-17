@@ -24,7 +24,11 @@ dw `32201223
 
 > Caregar no endereço de VRAM `$9800`
 
-O `Tilemap` deve obrigatoriamente ser uma linha de - **20** bytes de largura - **18** bytes de altura - Definidos por `db`
+O `Tilemap` deve obrigatoriamente ser uma linha de 
+
+- **20** bytes de largura
+- **18** bytes de altura
+- Definidos por `db`
 
 ## Scripts úteis
 
