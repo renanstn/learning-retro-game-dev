@@ -5,8 +5,7 @@ em plataformas antigas como GBA, NES e SNES.
 
 ## Game Boy
 
-- [Hello world](./GameBoy/hello-world)
-- [Primeiro jogo](./GameBoy/unbricked/)
+- [Estudos](GameBoy/)
 
 ## NES
 
