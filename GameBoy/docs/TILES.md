@@ -9,8 +9,7 @@
 
 > Carregar no endereço `$9000`
 
-Cada `Tile` pode ser definido por um `dw `, e os valores seguem a paleta de
-cores: 
+Cada `Tile` pode ser definido por um `dw`, e os valores seguem a paleta de cores: 
 
 - `0`: Branco
 - `1`: Cinza
