@@ -51,20 +51,15 @@ Fluxo de compilação:
 
 > In RGBDS assembly, the hexadecimal prefix is `$`, and the binary prefix is `%`.
 
-ROM: Memória que não pode ser escrita.
-RAM: Memória que pode ser escrita.
-
-Chaves são usadas para referencias **endereços**.
+- ROM: Memória que não pode ser escrita.
+- RAM: Memória que pode ser escrita.
+- Chaves `[]` são usadas para referenciar **endereços**.
 
 Gerando um sym da rom:
 
 ```shell
 rgblink -n hello-world.sym hello-world.o
 ```
-
-> On GB, tiles are always 8 by 8 pixels.
-
-> Game Boy palettes are 4 colors large.
 
 ## Armazenamento de tiles
 
