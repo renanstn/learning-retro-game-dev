@@ -2,9 +2,9 @@
 
 ## Descrição
 
-Este repositório foi um desafio pessoal.
+Este repositório foi um desafio pessoal simples.
 
-Se eu realmente aprendi o **básico** sobre sprites/tilemap emGB, eu serei capaz
+Se eu realmente aprendi o **básico** sobre sprites/tilemap em GB, eu serei capaz
 de fazer aparecer a cara do Berg fumando 2 cigarros na tela de um Game Boy.
 
 Deu certo! Consegui!
