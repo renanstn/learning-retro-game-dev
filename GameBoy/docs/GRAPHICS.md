@@ -5,6 +5,8 @@
 - Screen: 160 x 144px
 - Total: 256 x 256px
 - Tile: 8 x 8px
+- Scroll X (0 ˜ 255)
+- Scroll Y (0 ˜ 255)
 
 ## Tiles
 
