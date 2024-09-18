@@ -2,7 +2,7 @@
 
 ## Definições
 
-- Screen: 160 x 144px
+- Screen: 160 x 144px (20 x 18 map positions)
 - Total: 256 x 256px
 - Tile: 8 x 8px
 - Scroll X (0 ˜ 255)
