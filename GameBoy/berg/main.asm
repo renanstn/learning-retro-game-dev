@@ -16,7 +16,7 @@ WaitVBlank:
 	ld a, 0
 	ld [rLCDC], a
 
-    ; Copy letters tiles
+    ; Copy letters tiles ------------------------------------------------------
     ld de, letters
     ld hl, $9000
     ld bc, lettersEnd - letters
@@ -51,6 +51,7 @@ WaitVBlank:
 	ld a, %11100100
 	ld [rBGP], a
 
+; Game loop -------------------------------------------------------------------
 Done:
     jp Done
 
