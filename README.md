@@ -6,7 +6,7 @@ em plataformas antigas como GBA, NES e SNES.
 ## Game Boy
 
 - [Estudos](GameBoy/)
-- [Notes](GameBoy/docs/)
+- [Notas](GameBoy/docs/)
 
 ## NES
 
