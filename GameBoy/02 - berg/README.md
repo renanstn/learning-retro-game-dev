@@ -9,6 +9,8 @@ de fazer aparecer a cara do Berg fumando 2 cigarros na tela de um Game Boy.
 
 Deu certo! Consegui!
 
+Adicionei um texto na tela como bônus.
+
 ## Procedimentos
 
 - Reduzir a imagem original para um tamanho inferior a `256x256`
