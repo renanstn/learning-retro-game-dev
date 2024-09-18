@@ -1,11 +1,12 @@
 INCLUDE "hardware.inc"
+INCLUDE "text-macros.inc"
 
 SECTION "Header", ROM0[$100]
 	jp EntryPoint
 	ds $150 - @, 0
 
 EntryPoint:
-; Do not turn the LCD off outside of VBlank
+; Wait for VBlank
 WaitVBlank:
 	ld a, [rLY]
 	cp 144
@@ -17,88 +18,32 @@ WaitVBlank:
 
     ; Copy letters tiles
     ld de, letters
-    ld hl, $9270
+    ld hl, $9000
     ld bc, lettersEnd - letters
     call Memcopy
 
     ; Copy berg tile data
     ld de, bergTileData
-    ld hl, $9000
+    ld hl, $9340
     ld bc, bergTileDataEnd - bergTileData
     call Memcopy
 
     ; Copy tile map
-    ld de, bergTileMap
+    ld de, TileMap
     ld hl, $9800
-    ld bc, bergTileMapEnd - bergTileMap
+    ld bc, TilemapEnd - TileMap
     call Memcopy
 
     ; Write text
-    ld a, $4D       ; M
-    ld hl, $9887
-    ld [hl], a
-    ld a, $45       ; E
-    ld hl, $9888
-    ld [hl], a
-    ld a, $27       ; Space
-    ld hl, $9889
-    ld [hl], a
-    ld a, $56       ; V
-    ld hl, $988A
-    ld [hl], a
-    ld a, $45       ; E
-    ld hl, $988B
-    ld [hl], a
-    ld a, $27       ; Space
-    ld hl, $988C
-    ld [hl], a
-    ld a, $44       ; D
-    ld hl, $988D
-    ld [hl], a
-    ld a, $4F       ; O
-    ld hl, $988E
-    ld [hl], a
-    ld a, $49       ; I
-    ld hl, $988F
-    ld [hl], a
-    ld a, $53       ; S
-    ld hl, $9890
-    ld [hl], a
-    ld a, $44       ; D
-    ld hl, $98A7
-    ld [hl], a
-    ld a, $45       ; E
-    ld hl, $98A8
-    ld [hl], a
-    ld a, $52       ; R
-    ld hl, $98A9
-    ld [hl], a
-    ld a, $42       ; B
-    ld hl, $98AA
-    ld [hl], a
-    ld a, $59       ; Y
-    ld hl, $98AB
-    ld [hl], a
-    ld a, $27       ; Space
-    ld hl, $98AC
-    ld [hl], a
-    ld a, $53       ; S
-    ld hl, $98AD
-    ld [hl], a
-    ld a, $4F       ; O
-    ld hl, $98AE
-    ld [hl], a
-    ld a, $4C       ; L
-    ld hl, $98AF
-    ld [hl], a
-    ld a, $54       ; T
-    ld hl, $98B0
-    ld [hl], a
-    ld a, $4F       ; O
-    ld hl, $98B1
-    ld [hl], a
+    ld de, $9941
+    ld hl, DisplayText01
+    call DrawTextTilesLoop
 
-	; Turn the LCD on
+    ld de, $9961
+    ld hl, DisplayText02
+    call DrawTextTilesLoop
+
+	; Turn the LCD on ---------------------------------------------------------
 	ld a, LCDCF_ON | LCDCF_BGON
 	ld [rLCDC], a
 
@@ -108,6 +53,8 @@ WaitVBlank:
 
 Done:
     jp Done
+
+; =============================================================================
 
 ; @param de: Source
 ; @param hl: Destination
@@ -142,11 +89,34 @@ DrawTextTilesLoop:
     ; move to the next character and next background tile
     jp DrawTextTilesLoop
 
+; =============================================================================
+
+DisplayText01:  db "me ve dois", 255
+DisplayText02:  db "derby solto", 255
+
 letters: INCBIN "letters.2bpp"
 lettersEnd:
 
 bergTileData: INCBIN "berg.2bpp"
 bergTileDataEnd:
 
-bergTileMap: INCBIN "berg.tilemap"
-bergTileMapEnd:
+TileMap:
+    db $34, $34, $35, $36, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $37, $38, $39, $3A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $3B, $3C, $3D, $3E, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0
+TilemapEnd:
