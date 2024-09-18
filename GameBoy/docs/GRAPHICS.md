@@ -80,3 +80,10 @@ rgbgfx -u berg-screen.png -o berg.2bpp -t berg.tilemap
 ```sh
 rgbgfx text-font-inverted.png -c "#FFFFFF,#cbcbcb,#414141,#000000;" -o letters.2bpp
 ```
+
+## Referências absurdas de boas
+
+- How GameBoy Graphics Work Part 1: https://www.youtube.com/watch?v=txkHN6izK2Y
+- How GameBoy Graphics Work Part 2: https://www.youtube.com/watch?v=_h5TXh20_fQ
+- How GameBoy Graphics Work Part 3: https://www.youtube.com/watch?v=SK7XT0DWqtE
+- How GameBoy Graphics Work Part 4: https://www.youtube.com/watch?v=8TVgN16DrEU
