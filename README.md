@@ -18,7 +18,7 @@ em plataformas antigas como GBA, NES e SNES.
 
 ## Extensões úteis de VS Code
 
-- RGBDS Z80
+- RGBDS Z80 (para Game Boy)
 
 ## Ferramentas online
 
