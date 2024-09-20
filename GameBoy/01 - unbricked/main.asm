@@ -6,20 +6,16 @@ DEF BRICK_RIGHT EQU $06
 DEF BLANK_TILE  EQU $08
 
 SECTION "Header", ROM0[$100]
-
     jp EntryPoint
-
     ds $150 - @, 0 ; Make room for the header
 
 EntryPoint:
-    ; Empty for now
-
 WaitVBlank:
     ld a, [rLY]
     cp 144
     jp c, WaitVBlank
 
-    ; Turn the LCD off
+    ; Turn the LCD off --------------------------------------------------------
     ld a, 0
     ld [rLCDC], a
 
@@ -102,6 +98,7 @@ ClearOam:
     ld [wCurKeys], a
     ld [wNewKeys], a
 
+; =============================================================================
 Main:
     ; Wait until it's *not* VBlank
     ld a, [rLY]
