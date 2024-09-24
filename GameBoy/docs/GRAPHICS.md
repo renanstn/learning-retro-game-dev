@@ -14,7 +14,7 @@
 
 > Carregar no endereço `$9000`
 
-Cada `Tile` pode ser definido por um `dw`, e os valores seguem a paleta de cores: 
+Cada `Tile` pode ser definido por um `dw`, e os valores seguem a paleta de cores:
 
 - `0`: Branco
 - `1`: Cinza
@@ -29,11 +29,30 @@ dw `32201223
 
 > Caregar no endereço de VRAM `$9800`
 
-O `Tilemap` deve obrigatoriamente ser um bloco de 
+O `Tilemap` deve obrigatoriamente ser um bloco de
 
 - **20** bytes de largura
 - **18** bytes de altura
 - Definidos por `db`
+
+## Objetos
+
+Existe um espaço na memória exclusivo para você criar os objetos do seu jogo.
+
+Objetos possuem 4 bytes, sendo eles:
+
+| Ordem | Valor      |
+|-------|------------|
+| 0     | Y position |
+| 1     | X Position |
+| 2     | Tile ID    |
+| 3     | Attributes |
+
+### Espaços de vRAM para objetos
+
+- O primeiro quadrante `$8000+` é exclusivo para objetos
+- O segundo quadrante pode ser objetos ou BG
+- O terceiro quadrante é apenas BG
 
 ## Scripts úteis
 
