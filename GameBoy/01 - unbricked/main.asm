@@ -53,14 +53,14 @@ ClearOam:
     jp nz, ClearOam
 
     ; Initialize the paddle sprite in OAM -------------------------------------
-    ld hl, _OAMRAM
-    ld a, 128 + 16
+    ld hl, _OAMRAM  ; Point to address
+    ld a, 128 + 16  ; Set object Y position
     ld [hli], a
-    ld a, 16 + 8
+    ld a, 16 + 8    ; Set object X position
     ld [hli], a
-    ld a, 0
+    ld a, 0         ; Set object index
     ld [hli], a
-    ld [hli], a
+    ld [hli], a     ; Set attributes
 
     ; Initialize the ball sprite in OAM ---------------------------------------
     ld a, 100 + 16
