@@ -20,7 +20,7 @@ em plataformas antigas como GBA, NES e SNES.
 
 - RGBDS Z80 (para Game Boy)
 
-## Ferramentas online
+## Ferramentas online úteis
 
 - Piskel: https://www.piskelapp.com/
 - Tilemap editor: https://www.spritefusion.com
