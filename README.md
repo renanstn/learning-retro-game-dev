@@ -11,6 +11,8 @@ em plataformas antigas como GBA, NES e SNES.
 ## NES
 
 - Vem ai...
+- https://www.chibiakumas.com/6502/nesfamicom.php
+- https://www.nesdev.org/wiki/Programming_guide
 
 ## SNES
 
