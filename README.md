@@ -13,6 +13,7 @@ em plataformas antigas como GBA, NES e SNES.
 - Vem ai...
 - https://www.chibiakumas.com/6502/nesfamicom.php
 - https://www.nesdev.org/wiki/Programming_guide
+- https://www.nesdev.org/wiki/NES_reference_guide
 
 ## SNES
 
