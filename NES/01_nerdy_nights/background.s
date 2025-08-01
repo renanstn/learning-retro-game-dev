@@ -1,7 +1,7 @@
 .segment "HEADER"
 	.byte $4E, $45, $53, $1A  	; iNES header identifier
-	.byte 1						; 1x 16KB PRG code
-	.byte 1						; 1x  8KB CHR data
+	.byte $02					; 2x 16KB PRG code
+	.byte $01					; 1x  8KB CHR data
 	.byte $01, $00				; mapper 0 = NROM, no bank swapping / background mirroring
 
 .segment "VECTORS"
@@ -16,7 +16,6 @@
 ; nes linker config requires a STARTUP section, even if its empty
 
 .segment "CODE"
-
 reset:
 	sei				; disable IRQs
 	cld				; disable decimal mode
@@ -29,8 +28,7 @@ reset:
 	stx $2001 		; disable rendering
 	stx $4010 		; disable DMC IRQs
 
-; first wait for vblank to make sure PPU is ready
-vblankwait1:
+vblankwait1: 		; first wait for vblank to make sure PPU is ready
 	bit $2002
 	bpl vblankwait1
 
@@ -39,16 +37,16 @@ clear_memory:
 	sta $0000, x
 	sta $0100, x
 	sta $0200, x
-	sta $0300, x
 	sta $0400, x
 	sta $0500, x
 	sta $0600, x
 	sta $0700, x
+	LDA #$FE
+	STA $0300, x
 	inx
 	bne clear_memory
 
-; second wait for vblank, PPU is ready after this
-vblankwait2:
+vblankwait2: 		; second wait for vblank, PPU is ready after this
 	bit $2002
 	bpl vblankwait2
 
@@ -58,10 +56,10 @@ vblankwait2:
 
 forever:
 	jmp forever    	 ; infinite loop
- 
+
 nmi:
 	rti
- 
+
 .segment "CHARS"
 	.org $0000
 	.incbin "mario.chr"   ;includes 8KB graphics file from SMB1
