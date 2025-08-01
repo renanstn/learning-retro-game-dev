@@ -1,0 +1,2 @@
+C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ca65 C:\Users\renan\Documents\Github\learning-retro-game-dev\NES\00_youtube_tutorial\cast.s -o C:\Users\renan\Documents\Github\learning-retro-game-dev\NES\00_youtube_tutorial\cast.o -t nes
+C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ld65 C:\Users\renan\Documents\Github\learning-retro-game-dev\NES\00_youtube_tutorial\cast.o -o C:\Users\renan\Documents\Github\learning-retro-game-dev\NES\00_youtube_tutorial\cast.nes -t nes
