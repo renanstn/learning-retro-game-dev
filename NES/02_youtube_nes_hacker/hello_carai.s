@@ -79,23 +79,29 @@ forever:
   jmp forever
 
 nmi:
-  ldx #$00 			; Set SPR-RAM address to 0
+  ldx #$00 				; Set SPR-RAM address to 0
   stx $2003
 @loop:	lda hello, x 	; Load the hello message into SPR-RAM
   sta $2004
   inx
-  cpx #$1c
+  cpx #$30 				; big value here, because we have more letters
   bne @loop
   rti
 
 hello:
-  .byte $00, $00, $00, $00 	; Why do I need these here?
   .byte $00, $00, $00, $00
-  .byte $6c, $00, $00, $6c
-  .byte $6c, $01, $00, $76
-  .byte $6c, $02, $00, $80
-  .byte $6c, $02, $00, $8A
-  .byte $6c, $03, $00, $94
+  .byte $00, $00, $00, $00
+  .byte $6c, $00, $00, $6c	; h
+  .byte $6c, $01, $00, $76	; e
+  .byte $6c, $02, $00, $80	; l
+  .byte $6c, $02, $00, $8A	; l
+  .byte $6c, $03, $00, $94	; o
+  
+  .byte $82, $04, $00, $6c	; c
+  .byte $82, $05, $00, $76	; a
+  .byte $82, $06, $00, $80	; r
+  .byte $82, $05, $00, $8A	; a
+  .byte $82, $07, $00, $94	; i
 
 palettes:
   ; Background Palette
@@ -149,5 +155,45 @@ palettes:
   .byte %11000011
   .byte %11000011
   .byte %11100111
+  .byte %01111110
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  .byte %01111110	; C (04)
+  .byte %11100111
+  .byte %11000111
+  .byte %11000000
+  .byte %11000000
+  .byte %11000111
+  .byte %11100111
+  .byte %01111110
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  .byte %01111110	; A (05)
+  .byte %11100111
+  .byte %11000011
+  .byte %11000011
+  .byte %11111111
+  .byte %11000011
+  .byte %11000011
+  .byte %11000011
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  .byte %11111110	; R (06)
+  .byte %11100111
+  .byte %11000011
+  .byte %11111111
+  .byte %11110000
+  .byte %11011000
+  .byte %11001100
+  .byte %11000110
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  .byte %01111110	; I (07)
+  .byte %00011000
+  .byte %00011000
+  .byte %00011000
+  .byte %00011000
+  .byte %00011000
+  .byte %00011000
   .byte %01111110
   .byte $00, $00, $00, $00, $00, $00, $00, $00
