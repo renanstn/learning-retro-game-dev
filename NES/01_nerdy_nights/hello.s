@@ -13,21 +13,21 @@
 	.addr 0
 
 .segment "STARTUP"
-; "nes" linker config requires a STARTUP section, even if its empty
+; nes linker config requires a STARTUP section, even if its empty
 
 .segment "CODE"
 
 reset:
-	sei			; disable IRQs
-	cld			; disable decimal mode
+	sei				; disable IRQs
+	cld				; disable decimal mode
 	ldx #$40
 	stx $4017		; disable APU frame IRQ
 	ldx #$ff 		; Set up stack
-	txs			;  .
-	inx			; now X = 0
+	txs
+	inx				; now X = 0
 	stx $2000		; disable NMI
-	stx $2001 	; disable rendering
-	stx $4010 	; disable DMC IRQs
+	stx $2001 		; disable rendering
+	stx $4010 		; disable DMC IRQs
 
 ; first wait for vblank to make sure PPU is ready
 vblankwait1:
