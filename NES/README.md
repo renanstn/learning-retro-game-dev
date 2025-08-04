@@ -367,6 +367,99 @@ LDA #%00010000   ; no intensify (black background), enable sprites
 STA $2001
 ```
 
+#### Carregando múltiplos sprites
+
+Obviamente, codar sprite por sprite para aparecer na tela é um trabalho de corno, usaremos loops pra isso.
+
+Podemos definir nossos aprites em uma seção assim:
+
+```
+sprites:
+;     vert|tile|attr|horiz
+.byte $80, $32, $00, $80   ;sprite 0
+.byte $80, $33, $00, $88   ;sprite 1
+.byte $88, $34, $00, $80   ;sprite 2
+.byte $88, $35, $00, $88   ;sprite 3
+```
+
+E agora fazemos um loop para carregar isso, assim:
+
+```
+LoadSprites:
+  LDX #$00              ; start at 0
+LoadSpritesLoop:
+  LDA sprites, x        ; load data from address (sprites + x)
+  STA $0200, x          ; store into RAM address ($0200 + x)
+  INX                   ; X = X + 1
+  CPX #$10              ; Compare X to hex $10, decimal 16
+  BNE LoadSpritesLoop   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
+                        ; if compare was equal to 16, continue down
+```
+
+### Controles
+
+Controles dos players 1 e 2 podem ser acessados a partir das portas:
+- $4016
+- $4017
+
+Você precisa primeiro ESCREVER `$01` e `$00` nessas portas, para só então RECEBER sua leitura.
+
+A **ordem** de recebimento da leitura dos botões é:
+
+- A
+- B
+- Select
+- Start
+- Up
+- Down
+- Left
+- Right
+
+Exemplo de escrita/leitura:
+
+```
+  LDA #$01
+  STA $4016
+  LDA #$00
+  STA $4016     ; tell both the controllers to latch buttons
+
+  LDA $4016     ; player 1 - A
+  LDA $4016     ; player 1 - B
+  LDA $4016     ; player 1 - Select
+  LDA $4016     ; player 1 - Start
+  LDA $4016     ; player 1 - Up
+  LDA $4016     ; player 1 - Down
+  LDA $4016     ; player 1 - Left
+  LDA $4016     ; player 1 - Right
+
+  LDA $4017     ; player 2 - A
+  LDA $4017     ; player 2 - B
+  LDA $4017     ; player 2 - Select
+  LDA $4017     ; player 2 - Start
+  LDA $4017     ; player 2 - Up
+  LDA $4017     ; player 2 - Down
+  LDA $4017     ; player 2 - Left
+  LDA $4017     ; player 2 - Right
+```
+
+Para sabermos se um botão está apertado, utiliza-se a instrução `AND`.
+
+Exemplo completo de leitura e movimentação de sprites
+
+```
+ReadA: 
+  LDA $4016       ; player 1 - A
+  AND #%00000001  ; only look at bit 0
+  BEQ ReadADone   ; branch to ReadADone if button is NOT pressed (0)
+  ; add instructions here to do something when button IS pressed (1)
+  LDA $0203       ; load sprite X position
+  CLC             ; make sure the carry flag is clear
+  ADC #$01        ; A = A + 1
+  STA $0203       ; save sprite X position
+ReadADone:        ; handling this button is done  
+```
+
+
 
 
 

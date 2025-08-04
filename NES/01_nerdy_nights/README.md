@@ -4,9 +4,11 @@ Link: https://nerdy-nights.nes.science/#main_tutorial-0
 
 ## Projetos criados
 
-### Background
+### 00 - Background
 
 Nosso 'hello world', apenas exibe um fundo de tela azul. A cor pode ser alterada.
 
-### Sprite
+### 01 - Sprites
+
+Exibe 4 sprites na tela.
 

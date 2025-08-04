@@ -1,0 +1,1 @@
+C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ca65 02_controller.s -o controller.o -t nes && C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ld65 controller.o -o controller.nes -t nes && C:\Users\renan\Downloads\fceux-2.6.6-win64\fceux64.exe controller.nes
