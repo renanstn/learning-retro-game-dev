@@ -62,4 +62,4 @@ nmi:
 
 .segment "CHARS"
 	.org $0000
-	.incbin "mario.chr"   ;includes 8KB graphics file from SMB1
+	.incbin "mario.chr"   ;includes 8KB graphics file from SMB1 (but don not use yet)

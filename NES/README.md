@@ -235,6 +235,140 @@ Todo código deve conter esses 3 vetores.
 .dw 0          ;external interrupt IRQ is not used in this tutorial
 ```
 
+### Palettes
+
+Existem 2 paleta de cores de 16 bits cada:
+- Uma para o background
+- Uma para os sprites
+
+A paleta começa no endereço `$3F00` e `$3F10`.
+
+Porta `$2006` da PPU é usada para mexer com as paletas.
+- Essa porta precisa ser escrita duas vezes seguidas sempre, uma para o byte alto, e uma para o byte baixo.
+
+```
+LDA $2002    ; read PPU status to reset the high/low latch to high
+LDA #$3F
+STA $2006    ; write the high byte of $3F10 address
+LDA #$10
+STA $2006    ; write the low byte of $3F10 address
+```
+
+Ao "distribuir" as cores da paleta, o NES incrementa automaticamente o index. Então você só precisa se preocupar em setar o endereço inicial mesmo.
+
+Exemplo:
+
+```
+LDA #$32   ;code for light blueish
+STA $2007  ;write to PPU $3F10
+LDA #$14   ;code for pinkish
+STA $2007  ;write to PPU $3F11
+LDA #$2A   ;code for greenish
+STA $2007  ;write to PPU $3F12
+LDA #$16   ;code for redish
+STA $2007  ;write to PPU $3F13
+```
+
+Para armazenar isso de maneira mais prática e direta, use estruturas de `.db`:
+
+```
+.db $0F,$31,$32,$33,$0F,$35,$36,$37,$0F,$39,$3A,$3B,$0F,$3D,$3E,$0F  ;background palette data
+.db $0F,$1C,$15,$14,$0F,$02,$38,$3C,$0F,$1C,$15,$14,$0F,$02,$38,$3C  ;sprite palette data
+```
+
+E "distribua" ela com um loop assim:
+
+```
+  LDX #$00                ; start out at 0
+LoadPalettesLoop:
+  LDA PaletteData, x      ; load data from address (PaletteData + the value in x)
+                          ; 1st time through loop it will load PaletteData+0
+                          ; 2nd time through loop it will load PaletteData+1
+                          ; 3rd time through loop it will load PaletteData+2
+                          ; etc
+  STA $2007               ; write to PPU
+  INX                     ; X = X + 1
+  CPX #$20                ; Compare X to hex $20, decimal 32
+  BNE LoadPalettesLoop    ; Branch to LoadPalettesLoop if compare was Not Equal to zero
+                          ; if compare was equal to 32, keep going down
+```
+
+### Sprites
+
+- Tudo que se move é sprite.
+- Sprites são feitos de 8x8 pixels.
+- Sprites são criados usando DMA (direct memory access), bruto, literalmente chumba na tela.
+- RAM `$0200-02FF` é usada para isso.
+- Para transferir, precisa de 2 bytes: low e high.
+
+```
+LDA #$00
+STA $2003  ; set the low byte (00) of the RAM address
+LDA #$02
+STA $4014  ; set the high byte (02) of the RAM address, start the transfer
+```
+
+- Esse processo de "desenhar" deve ficar na sessão de **NMI** do código!
+
+#### Sprite data
+
+- Cada sprite precisa de 4 bytes para existir:
+	- 0: Y position
+	- 1: Tile number
+	- 2: Attribute
+	- 3: X position
+
+Attrs:
+
+```
+  76543210
+  |||   ||
+  |||   ++- Color Palette of sprite.  Choose which set of 4 from the 16 colors to use
+  |||
+  ||+------ Priority (0: in front of background; 1: behind background)
+  |+------- Flip sprite horizontally
+  +-------- Flip sprite vertically
+```
+
+- Essa distribuição de bytes se repete **64** vezes, para preencher a tela toda.
+- Assim como nós "ligamos" o fundo azul da tela na lição anterior, para exibir sprites também é preciso "ligar" eles na porta `$2001` da PPU (bit 4).
+- Ligando ele na porta `$2001`, precisa ativar também na porta de controle da PPU `$2000`:
+
+```
+  PPUCTRL ($2000)
+  76543210
+  | ||||||
+  | ||||++- Base nametable address
+  | ||||    (0 = $2000; 1 = $2400; 2 = $2800; 3 = $2C00)
+  | |||+--- VRAM address increment per CPU read/write of PPUDATA
+  | |||     (0: increment by 1, going across; 1: increment by 32, going down)
+  | ||+---- Sprite pattern table address for 8x8 sprites (0: $0000; 1: $1000)
+  | |+----- Background pattern table address (0: $0000; 1: $1000)
+  | +------ Sprite size (0: 8x8; 1: 8x16)
+  |
+  +-------- Generate an NMI at the start of the
+            vertical blanking interval vblank (0: off; 1: on)
+```
+
+Exemplo de código adicionando um sprite na tela e ativando o necessário para ele aparecer:
+
+```
+LDA #$80
+STA $0200        ;put sprite 0 in center ($80) of screen vertically
+STA $0203        ;put sprite 0 in center ($80) of screen horizontally
+LDA #$00
+STA $0201        ;tile number = 0
+STA $0202        ;color palette = 0, no flipping
+
+LDA #%10000000   ; enable NMI, sprites from Pattern Table 0
+STA $2000
+
+LDA #%00010000   ; no intensify (black background), enable sprites
+STA $2001
+```
+
+
+
 
 ------------------------------------------------------------------------------------------
 ## Anotações vídeo tutorial
