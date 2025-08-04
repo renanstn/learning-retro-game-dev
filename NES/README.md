@@ -1,7 +1,5 @@
 # NES
 
-TODO: Organizar melhor isso
-
 ## Anotações guia nerdy nights
 
 O NES possui um chip 6502 customizado.
