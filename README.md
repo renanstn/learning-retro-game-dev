@@ -10,10 +10,11 @@ em plataformas antigas como GBA, NES e SNES.
 
 ## NES
 
-- Vem ai...
+- [Estudos](NES/)
+
+- https://nerdy-nights.nes.science (guia que utilizei de fato para aprender)
 - https://www.chibiakumas.com/6502/nesfamicom.php
 - https://www.nesdev.org/wiki/Programming_guide
-- https://www.nesdev.org/wiki/NES_reference_guide
 
 ## SNES
 
