@@ -1,0 +1,1 @@
+C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ca65 03_backgrounds2.s -o backgrounds2.o -t nes && C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ld65 backgrounds2.o -o backgrounds2.nes -t nes && C:\Users\renan\Downloads\fceux-2.6.6-win64\fceux64.exe backgrounds2.nes

@@ -10,5 +10,8 @@ Nosso 'hello world', apenas exibe um fundo de tela azul. A cor pode ser alterada
 
 ### 01 - Sprites
 
-Exibe 4 sprites na tela.
+Aprendio a exibir sprites na tela.
 
+### 02 - Controller
+
+Aprendi a controlar a posição de sprites na tela lendoo input do gamepad.

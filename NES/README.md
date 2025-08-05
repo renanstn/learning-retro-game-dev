@@ -457,7 +457,22 @@ ReadA:
 ReadADone:        ; handling this button is done  
 ```
 
+### Backgrounds
 
+3 componentes são necessários para exibir um background na tela
+
+- Paleta de cores
+- Nametable dos sprites
+- Assign as cores nos sprites
+
+Uma tela, cheia de tiles de background, é chamada de **nametable**. E cabem 2 nametables completas no NES.
+
+Apenas 4 cores podem existir em uma área de 16x16 pixels.
+
+#### Carregando o BG
+
+Utilize o `.byte` para registar o background no seu código.
+Em seguida, copie-o para a PPU RAM.
 
 
 
