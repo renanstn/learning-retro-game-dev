@@ -474,7 +474,56 @@ Apenas 4 cores podem existir em uma área de 16x16 pixels.
 Utilize o `.byte` para registar o background no seu código.
 Em seguida, copie-o para a PPU RAM.
 
+### Variáveis e constantes
 
+Variável declara:
+
+- `pointerLo: .res 1`
+
+Constante declara:
+
+- `TOPWALL = $20`
+
+### Subrotinas
+
+Comandinhos mágicos:
+
+- `JSR <name>`: Chama uma subrotina.
+- `RTS`: é o famoso "return" que deve estar no final de uma subrotina.
+
+### Comandos novos
+
+- `LSR` (logical shift right): Move bits para a direita, é o mesmo que **dividir por 2** um valor (e o valor mais a direita é empurrado pro carry).
+- `ROL` (ROtate left): Move bits para a esquerda, é o mesm oque **multiplicar por 2** um valor (e o valor mais a esquerda é empurrado pro carry).
+
+Essa manobra é muito usada em casos assim:
+
+```
+ReadControllerLoop:
+	LDA $4016
+	LSR A           ; bit0 -> Carry
+	ROL buttons     ; bit0 <- Carry
+	DEX
+	BNE ReadControllerLoop
+	RTS
+```
+
+Com 2 comandos, a gente "tira" o bit que fala se o botão do controle ta apertado (pois é o bit mais a direita), e joga ele pra dentro da variável `buttons`.
+
+### Game layout
+
+Um jogo de NES geralmente segue a ordem:
+
+- Init (limpa RAM, carrega gráficos, setup PPU...)
+- Início do loop infinito
+- Espera NMI (no vblank)
+- Atualiza a tela (DMA), urgente! Pois não há muito tempo pra isso!
+- Leitura dos botões
+- Operações da game engine, cálculos, etc...
+- Atualiza posição dos gráficos na RAM (mas não na PPU ainda)
+- Volta no início do loop.
+
+Exercício: PONG!
 
 ------------------------------------------------------------------------------------------
 ## Anotações vídeo tutorial

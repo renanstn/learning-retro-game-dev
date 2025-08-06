@@ -81,7 +81,7 @@ clearMemory:
 
 	jsr vBlankWait 	; vBlank wait #2
 
-; Setup palettes --------------------------------------------------------------
+; Setup color palettes --------------------------------------------------------
 	lda $2002
 	lda #$3f 		; high byte
 	sta $2006		; write on port
@@ -98,10 +98,10 @@ LoadPalettesLoop:
 ; Set initial ball stats --------------
 	lda #$01
 	sta balldown
-	sta ballright
+	sta ballleft
 	lda #$00
 	sta ballup
-	sta ballleft
+	sta ballright
 
 	lda #$50
 	sta bally
@@ -126,7 +126,7 @@ LoadPalettesLoop:
 finalSettings:
 	lda #%10011000 	; Enable NMI and background
 	sta $2000
-	lda #%00010000 	; Setup PPU port: enable sprites and bg
+	lda #%00010000 	; Setup PPU port: bit 5: enable sprites / bit 4: enable bg
 	sta $2001
 
 forever:
@@ -134,7 +134,7 @@ forever:
 
 ; =============================================================================
 nmi:
-	; DMA
+	; DMA transfer
 	lda #$02
 	sta $4014
 
@@ -146,8 +146,8 @@ nmi:
 
 ; All graphics updates done by here, run game engine --------------------------
 	jsr readController1
-	;jsr readController2
-	
+	jsr readController2
+
 gameEngine:
 	lda gamestate
 	cmp #STATE_TILE
@@ -269,9 +269,32 @@ movePaddleDown:
 	sta paddle1ytop
 movePaddleDownDone:
 
-checkPattleCollision:
-	; TODO
-checkPattleCollisionDone:
+checkPaddle1Collision:
+	; check X position
+	lda ballx
+	sec
+	cmp #PADDLE1X + $08 			; consider paddle size
+	bcs checkPaddle1CollisionDone
+
+	; check ball above paddle
+	lda bally
+	clc
+	cmp paddle1ytop
+	bcc checkPaddle1CollisionDone
+
+	; check ball bellow paddle
+	sec
+	lda bally
+	sbc paddle1ytop
+	cmp #$20						; consider paddle heigth (4 sprites)
+	bcs checkPaddle1CollisionDone
+
+	; bounce ball, if code reach here
+	lda #$01
+	sta ballright
+	lda #$00
+	sta ballleft
+checkPaddle1CollisionDone:
 
 	jmp gameEngineDone
 
@@ -285,8 +308,9 @@ updateSprites:
 	sta $0202
 	lda ballx 	; x pos
 	sta $0203
+
 	; right paddle ----------
-	lda paddle1ytop
+	lda paddle1ytop 	; tile 1
 	sta $0204
 	lda #$25
 	sta $0205
@@ -294,16 +318,83 @@ updateSprites:
 	sta $0206
 	lda #PADDLE1X
 	sta $0207
-	; left paddle -----------
-	lda paddle2ybot
+
+	lda paddle1ytop		 ; tile 2
+	clc
+	adc #$08
 	sta $0208
 	lda #$25
 	sta $0209
 	lda #$00
 	sta $020A
-	lda #PADDLE2X
+	lda #PADDLE1X
 	sta $020B
-	
+
+	lda paddle1ytop		 ; tile 3
+	clc
+	adc #$0F
+	sta $020C
+	lda #$25
+	sta $020D
+	lda #$00
+	sta $020E
+	lda #PADDLE1X
+	sta $020F
+
+	lda paddle1ytop		 ; tile 4
+	clc
+	adc #$17
+	sta $0210
+	lda #$25
+	sta $0211
+	lda #$00
+	sta $0212
+	lda #PADDLE1X
+	sta $0213
+
+	; left paddle -----------
+	lda paddle2ybot		; tile 1
+	sta $0214
+	lda #$25
+	sta $0215
+	lda #$00
+	sta $0216
+	lda #PADDLE2X
+	sta $0217
+
+	lda paddle2ybot		; tile 2
+	clc
+	adc #$08
+	sta $0218
+	lda #$25
+	sta $0219
+	lda #$00
+	sta $021A
+	lda #PADDLE2X
+	sta $021B
+
+	lda paddle2ybot		; tile 3
+	clc
+	adc #$0F
+	sta $021C
+	lda #$25
+	sta $021D
+	lda #$00
+	sta $021E
+	lda #PADDLE2X
+	sta $021F
+
+	lda paddle2ybot		; tile 4
+	clc
+	adc #$17
+	sta $0220
+	lda #$25
+	sta $0221
+	lda #$00
+	sta $0222
+	lda #PADDLE2X
+	sta $0223
+
 	rts
 
 drawScore:
@@ -325,7 +416,6 @@ readController1Loop:
     rts
 
 readController2:
-	; request data
 	lda #$01
 	sta $4016
 	lda #$00
