@@ -15,3 +15,7 @@ Aprendio a exibir sprites na tela.
 ### 02 - Controller
 
 Aprendi a controlar a posição de sprites na tela lendoo input do gamepad.
+
+### 03 - Background 2
+
+Uma evolução do exercício do background, agora carregando um nametable inteiro.

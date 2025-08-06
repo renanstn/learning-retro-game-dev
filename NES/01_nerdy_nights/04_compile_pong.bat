@@ -1,0 +1,1 @@
+C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ca65 04_pong.s -o pong.o -t nes && C:\Users\renan\Downloads\cc65-snapshot-win32\bin\ld65 pong.o -o pong.nes -t nes && C:\Users\renan\Downloads\fceux-2.6.6-win64\fceux64.exe pong.nes
