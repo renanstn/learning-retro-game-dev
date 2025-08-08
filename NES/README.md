@@ -1,6 +1,6 @@
 # NES
 
-| ⚠️ | Projeto feito todo em Windows. |
+| ⚠️ | Todos os estudos, scripts e ferramentas dessa seção foram feitos em Windows. |
 |----|---------------------------------------------------------------------------|
 
 ## Anotações guia nerdy nights
