@@ -22,8 +22,8 @@ jobs:
           ca65 04_pong.s -o pong.o -t nes
           ld65 pong.o -o pong.nes -t nes
 
-      - name: Upload ROM to release
-        uses: softprops/action-gh-release@v2
+      - name: Upload ROM
+        uses: actions/upload-artifact@v3
         with:
-          files: NES/01_nerdy_nights/pong.nes
-          draft: true
+          name: Pong
+          path: NES/01_nerdy_nights/pong.nes
