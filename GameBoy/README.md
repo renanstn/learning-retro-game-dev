@@ -1,6 +1,8 @@
 # Game Boy
 
 | ⚠️ | Projeto feito todo em Linux. |
+|----|---------------------------------------------------------------------------|
+
 
 > Mais anotações sobre temas específicos foram salvos na pasta [docs](docs/)
 
