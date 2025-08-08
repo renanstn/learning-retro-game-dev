@@ -1,3 +1,4 @@
+; Pong game ===================================================================
 .segment "HEADER"
 	.byte $4E, $45, $53, $1A  	; iNES header identifier
 	.byte $02					; 2x 16KB PRG code
