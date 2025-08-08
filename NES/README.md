@@ -1,5 +1,8 @@
 # NES
 
+| ⚠️ | Projeto feito todo em Windows. |
+|----|---------------------------------------------------------------------------|
+
 ## Anotações guia nerdy nights
 
 O NES possui um chip 6502 customizado.
