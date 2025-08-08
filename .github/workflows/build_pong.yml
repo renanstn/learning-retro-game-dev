@@ -23,7 +23,7 @@ jobs:
           ld65 pong.o -o pong.nes -t nes
 
       - name: Upload ROM
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Pong
           path: NES/01_nerdy_nights/pong.nes
