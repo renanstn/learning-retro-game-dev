@@ -1,0 +1,30 @@
+name: Build Pong NES ROM
+
+on:
+  workflow_dispatch:  # Manually run
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install cc65
+        run: |
+          sudo apt update
+          sudo apt install -y cc65
+
+      - name: Build ROM
+        run: |
+          cd NES/01_nerdy_nights
+          ca65 04_pong.s -o pong.o -t nes
+          ld65 pong.o -o pong.nes -t nes
+
+      - name: Upload ROM to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: path/para/suajogo.nes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
