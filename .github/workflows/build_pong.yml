@@ -27,5 +27,3 @@ jobs:
         with:
           files: NES/01_nerdy_nights/pong.nes
           draft: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
