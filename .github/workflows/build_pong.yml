@@ -2,6 +2,9 @@ name: Build Pong NES ROM
 
 on:
   workflow_dispatch:  # Manually run
+  push:
+    paths:
+      - 'NES/01_nerdy_nights/04_pong.s'
 
 jobs:
   build:
