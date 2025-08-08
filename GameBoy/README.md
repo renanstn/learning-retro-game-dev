@@ -1,5 +1,7 @@
 # Game Boy
 
+| ⚠️ | Projeto feito todo em Linux. |
+
 > Mais anotações sobre temas específicos foram salvos na pasta [docs](docs/)
 
 Fonte: https://gbdev.io/gb-asm-tutorial/index.html
