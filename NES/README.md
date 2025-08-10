@@ -7,8 +7,10 @@
 
 O NES possui um chip 6502 customizado.
 
-- ROM - Read Only Memory, holds data that cannot be changed. This is where the game code or graphics is stored on the cart.
-- RAM - Random Access Memory, holds data that can be read and written. When power is removed, the chip is erased. A battery can be used to keep power and data valid.
+- ROM - Read Only Memory, holds data that cannot be changed. This is where the
+game code or graphics is stored on the cart.
+- RAM - Random Access Memory, holds data that can be read and written. When
+power is removed, the chip is erased. A battery can be used to keep power and data valid.
 - PRG - Program memory, the code for the game
 - CHR - Character memory, the data for graphics
 - CPU - Central Processing Unit, the main processor chip
@@ -20,19 +22,28 @@ Endereços são 4 dígitos, sempre seguidos de `$`.
 ### PPU
 
 - If there are more than 8 sprites on the scanline the rest are ignored.
-- Both the NTSC and PAL systems have a resolution of 256x240 pixels, but the top and bottom 8 rows are typically cut off by the NTSC TV resulting in 256x224.
-- NTSC runs at 60Hz and PAL runs at 50Hz. Running an NTSC game on a PAL system will be slower because of this timing difference. Sounds will also be slower.
+- Both the NTSC and PAL systems have a resolution of 256x240 pixels, but the
+top and bottom 8 rows are typically cut off by the NTSC TV resulting in 256x224.
+- NTSC runs at 60Hz and PAL runs at 50Hz. Running an NTSC game on a PAL system
+will be slower because of this timing difference. Sounds will also be slower.
 
 ### Graphics System
 
 - **Tiles**: 8x8 pixels
-- **Sprites**: É tudo que se move. Cabem 64 sprites na memória. Apenas 8 sprites por scanline são permitidos.
-- **Background**: Pode ser scrollado. Pode ser exibido na frente ou atrás do background. Em uma tela cabem 32x30 bg tiles. Há espaço interno para armazenar 2 telas ao mesmo tempo.
-- **Pattern Tables**: É onde todos os tile data ficam guardados. Cabem 256 tiles em uma table. Uma table é usada para sprites, e outra para backgrounds.
-- **Attribute Tables**: Armazenam informações de cores em 2x2 tile sections. Isso significa que uma área de 16x16 pixels só podem ter 4 cores diferentes.
-- **Palletes**: São duas áreas que armazenam informações de cores, uma para o bg, outra para os sprites. Cada paleta tem *16 cores*.
+- **Sprites**: É tudo que se move. Cabem 64 sprites na memória. Apenas 8 sprites
+por scanline são permitidos.
+- **Background**: Pode ser scrollado. Pode ser exibido na frente ou atrás do
+background. Em uma tela cabem 32x30 bg tiles. Há espaço interno para armazenar 2 telas ao mesmo tempo.
+- **Pattern Tables**: É onde todos os tile data ficam guardados. Cabem 256
+tiles em uma table. Uma table é usada para sprites, e outra para backgrounds.
+- **Attribute Tables**: Armazenam informações de cores em 2x2 tile sections.
+Isso significa que uma área de 16x16 pixels só podem ter 4 cores diferentes.
+- **Palletes**: São duas áreas que armazenam informações de cores, uma para o
+bg, outra para os sprites. Cada paleta tem *16 cores*.
 
-To display a tile on screen, the pixel color index is taken from the Pattern Table and the Attribute Table. That index is then looked up in the Palette to get the actual color.
+To display a tile on screen, the pixel color index is taken from the Pattern
+Table and the Attribute Table. That index is then looked up in the Palette to
+get the actual color.
 
 ### 6502
 
@@ -40,19 +51,22 @@ To display a tile on screen, the pixel color index is taken from the Pattern Tab
 
 #### Glossário
 
-- **Directives**: São comandos enviados para o *assembler* para fazer coisas, como achar algo na memória. Eles começam com `.`, e são identados. Exemplo: `.org $8000`.
-- **Labels**: A label fica alinhada com a margem esquerda, serve para organizar o código. O assembler traduz as label para endereços. Ex: `MyFunction:`.
+- **Directives**: São comandos enviados para o *assembler* para fazer coisas,
+como achar algo na memória. Eles começam com `.`, e são identados. Exemplo: `.org $8000`.
+- **Labels**: A label fica alinhada com a margem esquerda, serve para organizar
+o código. O assembler traduz as label para endereços. Ex: `MyFunction:`.
 - **OPcodes**: É uma instrução, como `JMP`.
-- **Operands**: Informações adicionais aos opcodes, cada opcode pode ter entre 1 e 3 operandos. Exemplo: `LDA #$FF`.
+- **Operands**: Informações adicionais aos opcodes, cada opcode pode ter entre
+1 e 3 operandos. Exemplo: `LDA #$FF`.
 - **Comments**: O bom e velho `;`.
 
 #### Memória
 
-`$0000-0800` - Internal RAM, 2KB chip in the NES
-`$2000-2007` - PPU access ports
-`$4000-4017` - Audio and controller access ports
-`$6000-7FFF` - Optional WRAM inside the game cart
-`$8000-FFFF` - Game cart ROM
+- `$0000-0800` - Internal RAM, 2KB chip in the NES
+- `$2000-2007` - PPU access ports
+- `$4000-4017` - Audio and controller access ports
+- `$6000-7FFF` - Optional WRAM inside the game cart
+- `$8000-FFFF` - Game cart ROM
 
 O chip possui 56 instruções. 10 são usadas geralmente.
 
@@ -66,7 +80,8 @@ LDA $0005 means load the value that is stored at address $0005
 
 #### Registradores
 
-O 6502 possui 3 registers de 8 bit + 1 status register. (Na vdd tem mais, mas o tutorial ignora)
+O 6502 possui 3 registers de 8 bit + 1 status register. (Na vdd tem mais, mas
+o tutorial ignora)
 
 - **A**: Accumulator, aquele usado nas operações matemáticas
 - **X**: Usado para contagens, loops, ou memory access.
@@ -185,7 +200,8 @@ BNE $FF00  ; Branch if Not Equal - opposite above, jump is made when zero flag i
 
 #### iNES Header
 
-Armazena informações sobre o jogo. Incluindo mapper, graphics mirroring, PRG/CHR sizes, etc.
+Armazena informações sobre o jogo. Incluindo mapper, graphics mirroring, PRG/CHR
+sizes, etc.
 
 ```
 .inesprg 1   ; 1x 16KB bank of PRG code
@@ -196,7 +212,8 @@ Armazena informações sobre o jogo. Incluindo mapper, graphics mirroring, PRG/C
 
 #### Banking
 
-Para cada banco, você precisa dizer para o assembler em que endereço de memória ele começa
+Para cada banco, você precisa dizer para o assembler em que endereço de memória
+ele começa
 
 ```
   .bank 0
@@ -222,9 +239,11 @@ Para cada banco, você precisa dizer para o assembler em que endereço de memór
 
 There are three times when the NES processor will interrupt your code and jump to a new location. These vectors, held in PRG ROM tell the processor where to go when that happens. Only the first two will be used in this tutorial.
 
-- **NMI Vector**: Acontece uma vez por frame. Avisa a hora do vBlank e sinaliza disponibilidade de atualizar os gráficos.
+- **NMI Vector**: Acontece uma vez por frame. Avisa a hora do vBlank e sinaliza
+disponibilidade de atualizar os gráficos.
 - **RESET Vector**: Acontece quando o NES liga, ou quando aperta RESET.
-- **IRQ Vector**: É ativado por "mapper chips" ou "audio interrupts" (ignorado neste tutorial).
+- **IRQ Vector**: É ativado por "mapper chips" ou "audio interrupts"
+(ignorado neste tutorial).
 
 Todo código deve conter esses 3 vetores.
 
@@ -245,7 +264,8 @@ Existem 2 paleta de cores de 16 bits cada:
 A paleta começa no endereço `$3F00` e `$3F10`.
 
 Porta `$2006` da PPU é usada para mexer com as paletas.
-- Essa porta precisa ser escrita duas vezes seguidas sempre, uma para o byte alto, e uma para o byte baixo.
+- Essa porta precisa ser escrita duas vezes seguidas sempre, uma para o byte
+alto, e uma para o byte baixo.
 
 ```
 LDA $2002    ; read PPU status to reset the high/low latch to high
@@ -255,7 +275,8 @@ LDA #$10
 STA $2006    ; write the low byte of $3F10 address
 ```
 
-Ao "distribuir" as cores da paleta, o NES incrementa automaticamente o index. Então você só precisa se preocupar em setar o endereço inicial mesmo.
+Ao "distribuir" as cores da paleta, o NES incrementa automaticamente o index.
+Então você só precisa se preocupar em setar o endereço inicial mesmo.
 
 Exemplo:
 
@@ -332,8 +353,12 @@ Attrs:
 ```
 
 - Essa distribuição de bytes se repete **64** vezes, para preencher a tela toda.
-- Assim como nós "ligamos" o fundo azul da tela na lição anterior, para exibir sprites também é preciso "ligar" eles na porta `$2001` da PPU (bit 4).
-- Ligando ele na porta `$2001`, precisa ativar também na porta de controle da PPU `$2000`:
+- Assim como nós "ligamos" o fundo azul da tela na lição anterior, para exibir
+sprites também é preciso "ligar" eles na porta `$2001` da PPU (bit 4).
+- Ligando ele na porta `$2001`, precisa ativar também na porta de controle da
+PPU `$2000`:
+
+##### PPUCTRL ($2000)
 
 ```
   PPUCTRL ($2000)
@@ -351,7 +376,8 @@ Attrs:
             vertical blanking interval vblank (0: off; 1: on)
 ```
 
-Exemplo de código adicionando um sprite na tela e ativando o necessário para ele aparecer:
+Exemplo de código adicionando um sprite na tela e ativando o necessário para
+ele aparecer:
 
 ```
 LDA #$80
@@ -370,13 +396,14 @@ STA $2001
 
 #### Carregando múltiplos sprites
 
-Obviamente, codar sprite por sprite para aparecer na tela é um trabalho de corno, usaremos loops pra isso.
+Obviamente, codar sprite por sprite para aparecer na tela é um trabalho de corno,
+usaremos loops pra isso.
 
 Podemos definir nossos aprites em uma seção assim:
 
 ```
 sprites:
-;     vert|tile|attr|horiz
+;     vert |tile|attr|horiz
 .byte $80, $32, $00, $80   ;sprite 0
 .byte $80, $33, $00, $88   ;sprite 1
 .byte $88, $34, $00, $80   ;sprite 2
@@ -400,10 +427,11 @@ LoadSpritesLoop:
 ### Controles
 
 Controles dos players 1 e 2 podem ser acessados a partir das portas:
-- $4016
-- $4017
+- `$4016`
+- `$4017`
 
-Você precisa primeiro ESCREVER `$01` e `$00` nessas portas, para só então RECEBER sua leitura.
+Você precisa primeiro ESCREVER `$01` e `$00` nessas portas, para só então
+RECEBER sua leitura.
 
 A **ordem** de recebimento da leitura dos botões é:
 
@@ -468,7 +496,8 @@ ReadADone:        ; handling this button is done
 - Nametable dos sprites
 - Assign as cores nos sprites
 
-Uma tela, cheia de tiles de background, é chamada de **nametable**. E cabem 2 nametables completas no NES.
+Uma tela, cheia de tiles de background, é chamada de **nametable**. E cabem 2
+nametables completas no NES.
 
 Apenas 4 cores podem existir em uma área de 16x16 pixels.
 
@@ -496,8 +525,10 @@ Comandinhos mágicos:
 
 ### Comandos novos
 
-- `LSR` (logical shift right): Move bits para a direita, é o mesmo que **dividir por 2** um valor (e o valor mais a direita é empurrado pro carry).
-- `ROL` (ROtate left): Move bits para a esquerda, é o mesm oque **multiplicar por 2** um valor (e o valor mais a esquerda é empurrado pro carry).
+- `LSR` (logical shift right): Move bits para a direita, é o mesmo que
+**dividir por 2** um valor (e o valor mais a direita é empurrado pro carry).
+- `ROL` (ROtate left): Move bits para a esquerda, é o mesmo que
+**multiplicar por 2** um valor (e o valor mais a esquerda é empurrado pro carry).
 
 Essa manobra é muito usada em casos assim:
 
@@ -511,7 +542,8 @@ ReadControllerLoop:
 	RTS
 ```
 
-Com 2 comandos, a gente "tira" o bit que fala se o botão do controle ta apertado (pois é o bit mais a direita), e joga ele pra dentro da variável `buttons`.
+Com 2 comandos, a gente "tira" o bit que fala se o botão do controle ta apertado
+(pois é o bit mais a direita), e joga ele pra dentro da variável `buttons`.
 
 ### Game layout
 
@@ -528,7 +560,7 @@ Um jogo de NES geralmente segue a ordem:
 
 Exercício: PONG!
 
-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 ## Anotações vídeo tutorial
 
 Baseadas neste vídeo: https://www.youtube.com/watch?v=V5uWqdK92i0
@@ -557,4 +589,5 @@ ld65 cart.o -o cart.nes -t nes
 
 ## Interrupção
 
-Parei este vídeo tutorial no meio, pois o cara estava ensinando tirando muito código do cu, sem explicar o motivo. Não gostei.
+Parei este vídeo tutorial no meio, pois o cara estava ensinando tirando muito
+código do cu, sem explicar o motivo. Não gostei.
