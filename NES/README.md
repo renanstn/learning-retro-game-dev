@@ -5,6 +5,8 @@
 
 ## Anotações guia nerdy nights
 
+https://nerdy-nights.nes.science
+
 O NES possui um chip 6502 customizado.
 
 - ROM - Read Only Memory, holds data that cannot be changed. This is where the
@@ -559,6 +561,8 @@ Um jogo de NES geralmente segue a ordem:
 - Volta no início do loop.
 
 Exercício: PONG!
+
+### Next...
 
 -------------------------------------------------------------------------------
 ## Anotações vídeo tutorial
