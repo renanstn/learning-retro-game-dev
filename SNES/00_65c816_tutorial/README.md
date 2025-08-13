@@ -193,4 +193,168 @@ RTS
 
 ## Tables and indexing
 
+Tipos de dados usados em tables:
+
+| Instruction | Full name      | Explanation                                                 |
+|-------------|----------------|-------------------------------------------------------------|
+| **db**      | direct byte    | A value denoting a byte (8-bit value, e.g. $XX)              |
+| **dw**      | direct word    | A value denoting a word (16-bit value, e.g. $XXXX)           |
+| **dl**      | direct long    | A value denoting a long (24-bit value, e.g. $XXXXXX)         |
+| **dd**      | direct double  | A value denoting a double (32-bit value, e.g. $XXXXXXXX)     |
+
+Exemplo de definição:
+
+```
+ValuesTableExample: db $11,$86,$91,$38,$22
+```
+
+## Stack
+
+É possível fazer push dos valores em A, X e Y na stack com os comandos:
+
+- PHA
+- PHX
+- PHY
+
+Da mesma forma, da pra fazer pull com:
+
+- PLA
+- PLX
+- PLY
+
+Exemplo de uso:
+
+- Imagine que o registrador X **precisa** guardar o valor $19, mas você precisa usar o registrador X para outra coisa:
+
+```
+                   ; Imagine X has the value $19 in the stack
+PHX                ; Push X ($19) onto stack. Result: Stack 1st value = $19
+LDX $91            ; Load the value in address $7E0091 into X
+LDA $1000,x        ; \ X is now modified, and we use it to index RAM
+STA $0100          ; /
+PLX                ; Restore X. X is now $19 again
+```
+
+Tem mais códigos de pull/push, confere a documentação qualquer coisa.
+
+## Copiando dados
+
+O 65c816 tem 2 opcodes destinados a mover grandes blocos de dados de um local para outro:
+
+- MVN: Move block negative: Move no sentido ->
+- MVP: Move block positive: Move no sentido <-
+
+É recomendado deixar os registradores todos em modo 16-bit ao fazer MV, e preservar o data bank (não entendi ainda o porque) assim:
+
+```
+PHB                ; Preserve data bank
+REP #$30           ; 16-bit AXY
+                   ; ← Move instructions are located here
+SEP #$30           ; 8-bit AXY
+PLB                ; Recover data bank
+```
+
+### MVN
+
+Ao fazer MVN, todos os 3 registradores principais tem um propósito diferente:
+
+- A: Specifies the amount of bytes to transfer, plus 1
+- X: Specifies the high and low bytes of the data source memory address
+- Y: Specifies the high and low bytes of the destination memory address
+
+| The A register is "plus 1". This means that if you want to move 4 bytes of data, you load $0003, as this means $0003+1, thus 4 bytes.
+
+MVN pode ser escrito de duas formas:
+
+```
+MVN $xxyy
+; or
+MVN $yy, $xx
+```
+
+Where `xx` is the source bank, and `yy` is the destination bank.
+
+
+Durante a execução do MVN, vai acontecendo isso com os registradores:
+
+- A: Decreases by 1
+- X: Increases by 1
+- Y: Increases by 1
+- Data bank: Is set to the bank of the destination address
+
+Exemplo de uso:
+
+```
+PHB                ; Preserve data bank
+REP #$30           ; 16-bit AXY
+LDA #$0004         ; \
+LDX #$8908         ;  |
+LDY #$A000         ;  | Move 5 bytes of data from $1F8908 to $7FA000
+MVN $7F, $1F       ; /
+SEP #$30           ; 8-bit AXY
+PLB                ; Recover data bank
+```
+
+### MVP
+
+Segue as mesmas regras do MVN, exceto aqui:
+
+- A: Decreases by 1
+- X: Decreases by 1
+- Y: Decreases by 1
+- Data bank: Is set to the bank of the destination address
+
+Exemplo:
+
+```
+PHB                ; Preserve data bank
+REP #$30           ; 16-bit AXY
+LDA #$0004         ; \
+LDX #$8908         ;  |
+LDY #$A000         ;  | Move 5 bytes of data from ($1F8908-$0004) to ($7FA000-$0004)
+MVP $7F, $1F       ; /
+SEP #$30           ; 8-bit AXY
+PLB                ; Recover data bank
+```
+
+### Edge cases
+
+- When you set the A register to $0000, it means you will move 1 byte.
+
+### Easy notation
+
+Você pode usar labels como parameters:
+
+```
+PHB
+REP #$30
+LDA.w #SomeTable_end-SomeTable-$01
+LDX.w #SomeTable
+LDY #$A000
+MVN $7F, SomeTable>>16
+SEP #$30
+PLB
+RTS
+
+SomeTable: db $00,$01,$02,$03,$04
+.end
+```
+
+```
+PHB
+REP #$30
+LDA.w #SomeTable_end-SomeTable-$01
+LDX.w #SomeTable+SomeTable_end-SomeTable-$01
+LDY.w #$A000+SomeTable_end-SomeTable-$01
+MVP $7F, SomeTable>>16
+SEP #$30
+PLB
+RTS
+
+SomeTable: db $00,$01,$02,$03,$04
+.end
+```
+
+## Flags do Processador
+
 - TODO
