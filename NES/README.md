@@ -562,7 +562,83 @@ Um jogo de NES geralmente segue a ordem:
 
 Exercício: PONG!
 
-### Next...
+### Sounds
+
+- A APU é responsável por gerar os sons.
+- A APU tem 5 canais:
+  - Square 1 (guitar)
+  - Square 2 (guitar)
+  - Triangle (bass lines)
+  - Noise (percussion)
+  - DMC (used to play samples)
+
+#### Ativando canais
+
+Ativa-se os canais de áudio através das APUFLAGS, via porta `$4015`:
+
+```
+APUFLAGS ($4015)
+
+76543210
+   |||||
+   ||||+- Square 1 (0: disable; 1: enable)
+   |||+-- Square 2
+   ||+--- Triangle
+   |+---- Noise
+   +----- DMC
+```
+
+#### Tocando um bip!
+
+- O square 1 é controlado através das portas `$4000-$4003`.
+- A primeira porta (`$4000`), controla o duty cycle (tom), e o volume:
+
+```
+SQ1_ENV ($4000)
+
+76543210
+||||||||
+||||++++- Volume
+|||+----- Saw Envelope Disable (0: use internal counter for volume; 1: use Volume for volume)
+||+------ Length Counter Disable (0: use Length Counter; 1: disable Length Counter)
+++------- Duty Cycle
+```
+
+- Portas `$4002` e `$4003` controlam a nota em si! Notas tem 11 bits de tamanho.
+
+```
+SQ1_LO ($4002)
+
+76543210
+||||||||
+++++++++- Low 8-bits of period
+
+SQ1_HI ($4003)
+
+76543210
+||||||||
+|||||+++- High 3-bits of period
++++++---- Length Counter
+```
+
+Observe 11 bits sendo usados para a nota!
+
+Exemplo de código que toca um bip infinito:
+
+```
+  lda #%00000001
+  sta $4015       ;enable square 1
+
+  lda #%10111111  ;Duty 10, Volume F
+  sta $4000
+
+  lda #$C9        ;0C9 is a C# in NTSC mode
+  sta $4002
+  lda #$00
+  sta $4003
+```
+
+
 
 -------------------------------------------------------------------------------
 ## Anotações vídeo tutorial
