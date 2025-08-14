@@ -174,6 +174,8 @@ finalSettings:
 	sta $2000
 	lda #%00011000 	; Setup PPU port: bit 5: enable sprites / bit 4: enable bg
 	sta $2001
+	lda #%00000001 	; Setup API: enable square 1
+	sta $4015
 
 forever:
 	jmp forever
@@ -352,6 +354,13 @@ checkPaddle1Collision:
 	sta ballright
 	lda #$00
 	sta ballleft
+	; Play sound
+	lda #%01001111
+	sta $4000
+	lda #$C9
+	sta $4002
+	lda #%00010001
+	sta $4003
 checkPaddle1CollisionDone:
 
 checkPaddle2Collision:
@@ -369,6 +378,13 @@ checkPaddle2Collision:
 	sta ballleft
 	lda #$00
 	sta ballright
+	; Play sound
+	lda #%01001111
+	sta $4000
+	lda #$C9
+	sta $4002
+	lda #%00010011
+	sta $4003
 checkPaddle2CollisionDone:
 
 	jmp gameEngineDone
