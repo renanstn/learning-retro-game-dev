@@ -1,9 +1,6 @@
 # NES
 
-| ⚠️ | Todos os estudos, scripts e ferramentas dessa seção foram feitos em Windows. |
-|----|---------------------------------------------------------------------------|
-
-## Anotações guia nerdy nights
+## Anotações do guia nerdy nights
 
 https://nerdy-nights.nes.science
 
@@ -638,7 +635,10 @@ Exemplo de código que toca um bip infinito:
   sta $4003
 ```
 
+## Ferramentas úteis para composição musical
 
+- https://famistudio.org/
+- http://famitracker.com/#
 
 -------------------------------------------------------------------------------
 ## Anotações vídeo tutorial
@@ -651,7 +651,7 @@ Baseadas neste vídeo: https://www.youtube.com/watch?v=V5uWqdK92i0
 - Fluxo de compilação aparentemente é igual o do GB (ASM -> .O -> .NES)
 - FCEUX é o emulador utilizado
 
-## Entendendo o código assembly
+### Entendendo o código assembly
 
 5 sessões:
 - HEADER
@@ -660,14 +660,14 @@ Baseadas neste vídeo: https://www.youtube.com/watch?v=V5uWqdK92i0
 - VECTORS
 - CHARS
 
-## Compilando
+### Compilando
 
 ```sh
 ca65 cart.s -o cart.o -t nes
 ld65 cart.o -o cart.nes -t nes
 ```
 
-## Interrupção
+### Interrupção
 
 Parei este vídeo tutorial no meio, pois o cara estava ensinando tirando muito
 código do cu, sem explicar o motivo. Não gostei.
