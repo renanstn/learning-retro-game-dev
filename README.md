@@ -18,7 +18,7 @@ em plataformas antigas como GBA, NES e SNES.
 
 ## SNES
 
-- Vem ai... Não vejo a hora!
+- [Estudos](SNES/)
 
 ## Extensões úteis de VS Code
 
