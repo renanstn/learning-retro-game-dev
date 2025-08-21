@@ -5,9 +5,13 @@
 - Escolhi uma spitesheet no *The Spriters Resource*
 - Recortei no Aseprite, alterei o *color mode* para **indexed colors**
 - No NEXXT studio: File -> import -> import image
-- File -> patterns (.chr) -> save all CHR banks
+- File -> patterns (.chr) -> save 8k
+
+O chr, no meu caso, precisava ter 8kb de tamanho, pois isso estava de alguma forma pré-definida no código e eu ainda não aprendi a mudar.
 
 Com isso eu já consegui gerar um arquivo .chr funcional, eu abri ele no YY-CHR para conferir.
+
+Consegui também gerar uma ROM válida, importando o CHR, e vendo os sprites na PPU viewer.
 
 ## Convert JPG to NES BG
 
