@@ -74,14 +74,33 @@ LoadPalettesLoop:
 	cpx #$20 		; decimal: 16
 	bne LoadPalettesLoop
 
-; Enable NMI and PPU ----------------------------------------------------------
+; Enable NMI and setup PPU ----------------------------------------------------
 finalSettings:
 	lda #%10011000 	; Enable NMI and background
+         ;||||||||
+         ;||||||++-- Base nametable address
+         ;||||||     (0 = $2000; 1 = $2400; 2 = $2800; 3 = $2C00)
+         ;|||||+---- VRAM address increment per CPU read/write of PPUDATA
+         ;|||||      (0: add 1, going across; 1: add 32, going down)
+         ;||||+----- Sprite pattern table address for 8x8 sprites
+         ;||||       (0: $0000; 1: $1000; ignored in 8x16 mode)
+         ;|||+------ Background pattern table address (0: $0000; 1: $1000)
+         ;||+------- Sprite size (0: 8x8 pixels; 1: 8x16 pixels – see PPU OAM#Byte 1)
+         ;|+-------- PPU master/slave select
+         ;|          (0: read backdrop from EXT pins; 1: output color on EXT pins)
+         ;+--------- Vblank NMI enable (0: off, 1: on)
 	sta $2000
 	lda #%00011000 	; Setup PPU port: bit 5: enable sprites / bit 4: enable bg
+	     ;||||||||
+	     ;|||||||+-- Greyscale (0: normal color, 1: greyscale)
+	     ;||||||+--- 1: Show background in leftmost 8 pixels of screen, 0: Hide
+	     ;|||||+---- 1: Show sprites in leftmost 8 pixels of screen, 0: Hide
+	     ;||||+----- 1: Enable background rendering
+	     ;|||+------ 1: Enable sprite rendering
+	     ;||+------- Emphasize red (green on PAL/Dendy)
+	     ;|+-------- Emphasize green (red on PAL/Dendy)
+	     ;+--------- Emphasize blue
 	sta $2001
-	lda #%00000001 	; Setup API: enable square 1
-	sta $4015
 
 forever:
 	jmp forever
