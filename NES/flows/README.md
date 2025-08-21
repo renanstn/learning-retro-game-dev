@@ -1,5 +1,14 @@
 # Flows
 
+## Criando sprites do zero
+
+- Escolhi uma spitesheet no *The Spriters Resource*
+- Recortei no Aseprite, alterei o *color mode* para **indexed colors**
+- No NEXXT studio: File -> import -> import image
+- File -> patterns (.chr) -> save all CHR banks
+
+Com isso eu já consegui gerar um arquivo .chr funcional, eu abri ele no YY-CHR para conferir.
+
 ## Convert JPG to NES BG
 
 Testar isso:
