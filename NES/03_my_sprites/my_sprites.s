@@ -18,8 +18,6 @@
 
 ; =============================================================================
 .segment "ZEROPAGE" ; Quick access variables (addresses: $00–$FF)
-pointerLo: 		.res 1 	; used in background load loop
-pointerHi: 		.res 1	; used in background load loop
 buttons1:		.res 1
 buttons2:		.res 1
 playerX: 		.res 1
@@ -134,25 +132,6 @@ nmi:
 
 ; Subroutines -----------------------------------------------------------------
 updateSprites:
-	ldx #$00
-	ldy #$00
-nextLine:
-	lda playerLineWidths, y
-	sta lineWidth
-	ldy #$00
-nextTile:
-	lda playerTiles, x 		; tile index
-	sta $0201
-	lda #$00 				; attrs
-	sta $0202
-	lda playerX
-	sta $0203
-	lda playerY
-	sta $0200
-	inx
-	iny
-	cpy lineWidth
-	bne nextTile
 	rts
 
 readController1:
@@ -205,9 +184,6 @@ playerTiles:
     .byte $23, $24
     .byte $33, $34
     .byte $43, $44, $45
-
-playerLineWidths:
-    .byte 2, 2, 2, 3
 
 backgroundData:
 attributeData:
