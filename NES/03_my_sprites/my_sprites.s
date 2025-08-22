@@ -1,9 +1,10 @@
-; My game =====================================================================
+; iNES header =================================================================
 .segment "HEADER"
-	.byte $4E, $45, $53, $1A  	; iNES header identifier
+	.byte $4E, $45, $53, $1A  	; iNES header identifier ("NES" + $1A)
 	.byte $02					; 2x 16KB PRG code
 	.byte $01					; 1x  8KB CHR data
 	.byte $01, $00				; mapper 0 = NROM, no bank swapping / background mirroring
+	; The missing header bytes are set 00 by the assembler
 
 ; =============================================================================
 .segment "VECTORS"
@@ -21,6 +22,8 @@ pointerLo: 		.res 1 	; used in background load loop
 pointerHi: 		.res 1	; used in background load loop
 buttons1:		.res 1
 buttons2:		.res 1
+playerX: 		.res 1
+playerY: 		.res 1
 
 ; =============================================================================
 .segment "CODE"
@@ -61,11 +64,13 @@ clearMemory:
 	jsr vBlankWait 	; vBlank wait #2
 
 ; Setup color palettes --------------------------------------------------------
-	lda $2002
+	lda $2002 		; latch the flag, because we will write two times in $2006 (low and high byte)
+	; Load color palette in address $3F00
 	lda #$3f 		; high byte
 	sta $2006		; write on port
-	lda #$10		; low byte
+	lda #$00		; low byte
 	sta $2006		; write on port
+
 	ldx #$00
 LoadPalettesLoop:
 	lda paletteData, x
@@ -74,9 +79,15 @@ LoadPalettesLoop:
 	cpx #$20 		; decimal: 16
 	bne LoadPalettesLoop
 
+; Init values -----------------------------------------------------------------
+	lda #$2F
+	sta playerX
+	lda #$A0
+	sta playerY
+
 ; Enable NMI and setup PPU ----------------------------------------------------
 finalSettings:
-	lda #%10011000 	; Enable NMI and background
+	lda #%10000000 	; Enable NMI and background
          ;||||||||
          ;||||||++-- Base nametable address
          ;||||||     (0 = $2000; 1 = $2400; 2 = $2800; 3 = $2C00)
@@ -123,6 +134,25 @@ nmi:
 
 ; Subroutines -----------------------------------------------------------------
 updateSprites:
+	ldx #$00
+	ldy #$00
+nextLine:
+	lda playerLineWidths, y
+	sta lineWidth
+	ldy #$00
+nextTile:
+	lda playerTiles, x 		; tile index
+	sta $0201
+	lda #$00 				; attrs
+	sta $0202
+	lda playerX
+	sta $0203
+	lda playerY
+	sta $0200
+	inx
+	iny
+	cpy lineWidth
+	bne nextTile
 	rts
 
 readController1:
@@ -130,6 +160,7 @@ readController1:
     sta $4016
     lda #$00
     sta $4016
+
     ldx #$08
 readController1Loop:
     lda $4016
@@ -144,6 +175,7 @@ readController2:
 	sta $4016
 	lda #$00
 	sta $4016
+
 	ldx #$08
 readController2Loop:
 	lda $4017
@@ -156,8 +188,26 @@ readController2Loop:
 ; =============================================================================
 .segment "RODATA"
 paletteData:
-	.byte $0F,$37,$24,$0F, $0F,$0F,$0F,$0F, $0F,$0F,$0F,$0F, $0F,$0F,$0F,$0F ; sprite palette
-	.byte $0F,$0F,$0F,$0F, $0F,$0F,$0F,$0F, $0F,$0F,$0F,$0F, $0F,$0F,$0F,$0F ; background palette
+    ; Background palettes
+    .byte $0F, $01, $21, $31   ; BG pal 0
+    .byte $0F, $06, $16, $26   ; BG pal 1
+    .byte $0F, $09, $19, $29   ; BG pal 2
+   	.byte $0F, $0C, $2C, $3C   ; BG pal 3
+
+    ; Sprite palettes
+    .byte $0F, $01, $11, $21   ; SPR pal 0
+    .byte $0F, $05, $15, $25   ; SPR pal 1
+    .byte $0F, $09, $19, $29   ; SPR pal 2
+    .byte $0F, $0C, $1C, $2C   ; SPR pal 3
+
+playerTiles:
+    .byte $13, $14
+    .byte $23, $24
+    .byte $33, $34
+    .byte $43, $44, $45
+
+playerLineWidths:
+    .byte 2, 2, 2, 3
 
 backgroundData:
 attributeData:
