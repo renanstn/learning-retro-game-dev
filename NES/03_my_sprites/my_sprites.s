@@ -24,7 +24,7 @@ playerX: 		.res 1
 playerY: 		.res 1
 spritesPointer: .res 2
 spriteTile: 	.res 1
-NUM_SPRITES 	= $02
+NUM_SPRITES 	= $08
 
 ; =============================================================================
 .segment "CODE"
@@ -141,10 +141,12 @@ nmi:
 
 ; Subroutines -----------------------------------------------------------------
 updateSprites:
-	ldy #$00 				; OAM index
-	ldx #$00				; spriteXOffsets index
+	ldy #$00 	; OAM index, incremented on every step
+	ldx #$00	; spriteXOffsets / spriteYOffsets index, incremented on every sprite
 updateSpriteLoop:
 	lda playerY
+	clc
+	adc spriteYOffsets, x
 	sta (spritesPointer), y
 	iny
 
@@ -167,8 +169,6 @@ updateSpriteLoop:
 	bne updateSpriteLoop
 
 	rts
-
-	; ATE AQUI TA FUNCIONANDO!!!
 
 readController1:
     lda #$01
@@ -216,10 +216,13 @@ paletteData:
     .byte $0F, $0F, $0F, $0F   ; SPR pal 3
 
 spriteXOffsets:
-	.byte $00, $08, $00, $08
+	.byte $00, $08, $00, $08, $00, $08, $00, $08
+
+spriteYOffsets:
+	.byte $00, $00, $08, $08, $0F, $0F, $17, $17
 
 spriteTiles:
-	.byte $04, $05
+	.byte $04, $05, $14, $15, $24, $25, $34, $35
 
 backgroundData:
 attributeData:
