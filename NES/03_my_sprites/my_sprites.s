@@ -22,6 +22,9 @@ buttons1:		.res 1
 buttons2:		.res 1
 playerX: 		.res 1
 playerY: 		.res 1
+spritesPointer: .res 2
+spriteTile: 	.res 1
+NUM_SPRITES 	= $02
 
 ; =============================================================================
 .segment "CODE"
@@ -78,10 +81,16 @@ LoadPalettesLoop:
 	bne LoadPalettesLoop
 
 ; Init values -----------------------------------------------------------------
-	lda #$2F
+	lda #$20
 	sta playerX
-	lda #$A0
+	lda #$20
 	sta playerY
+	lda #$00
+	sta spritesPointer
+	lda #$02
+	sta spritesPointer + 1
+	lda #$04
+	sta spriteTile
 
 ; Enable NMI and setup PPU ----------------------------------------------------
 finalSettings:
@@ -120,7 +129,7 @@ nmi:
 	lda #$02
 	sta $4014
 
-	lda #$00 	; set no background scrolling
+	lda #$00 		; set no background scrolling
 	sta $2005
 	sta $2005
 
@@ -132,7 +141,34 @@ nmi:
 
 ; Subroutines -----------------------------------------------------------------
 updateSprites:
+	ldy #$00 				; OAM index
+	ldx #$00				; spriteXOffsets index
+updateSpriteLoop:
+	lda playerY
+	sta (spritesPointer), y
+	iny
+
+	lda spriteTiles, x
+	sta (spritesPointer), y
+	iny
+
+	lda #$00
+	sta (spritesPointer), y
+	iny
+
+	lda playerX
+	clc
+	adc spriteXOffsets, x
+	sta (spritesPointer), y
+	iny
+	inx
+
+	cpx #NUM_SPRITES
+	bne updateSpriteLoop
+
 	rts
+
+	; ATE AQUI TA FUNCIONANDO!!!
 
 readController1:
     lda #$01
@@ -168,22 +204,22 @@ readController2Loop:
 .segment "RODATA"
 paletteData:
     ; Background palettes
-    .byte $0F, $01, $21, $31   ; BG pal 0
-    .byte $0F, $06, $16, $26   ; BG pal 1
-    .byte $0F, $09, $19, $29   ; BG pal 2
-   	.byte $0F, $0C, $2C, $3C   ; BG pal 3
+    .byte $22, $22, $22, $22   ; BG pal 0
+    .byte $0F, $0F, $0F, $0F   ; BG pal 1
+    .byte $0F, $0F, $0F, $0F   ; BG pal 2
+   	.byte $0F, $0F, $0F, $0F   ; BG pal 3
 
     ; Sprite palettes
-    .byte $0F, $01, $11, $21   ; SPR pal 0
-    .byte $0F, $05, $15, $25   ; SPR pal 1
-    .byte $0F, $09, $19, $29   ; SPR pal 2
-    .byte $0F, $0C, $1C, $2C   ; SPR pal 3
+    .byte $0F, $16, $28, $0F   ; SPR pal 0
+    .byte $0F, $0F, $0F, $0F   ; SPR pal 1
+    .byte $0F, $0F, $0F, $0F   ; SPR pal 2
+    .byte $0F, $0F, $0F, $0F   ; SPR pal 3
 
-playerTiles:
-    .byte $13, $14
-    .byte $23, $24
-    .byte $33, $34
-    .byte $43, $44, $45
+spriteXOffsets:
+	.byte $00, $08, $00, $08
+
+spriteTiles:
+	.byte $04, $05
 
 backgroundData:
 attributeData:
@@ -191,4 +227,4 @@ attributeData:
 ; =============================================================================
 .segment "CHARS"
 	.org $0000 			; chr data will be loaded at $0000 address
-	.incbin "test5.chr"
+	.incbin "test8.chr"
