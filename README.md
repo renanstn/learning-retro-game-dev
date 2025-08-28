@@ -12,10 +12,6 @@ em plataformas antigas como GBA, NES e SNES.
 
 - [Estudos](NES/)
 
-- https://nerdy-nights.nes.science (guia que utilizei de fato para aprender)
-- https://www.chibiakumas.com/6502/nesfamicom.php
-- https://www.nesdev.org/wiki/Programming_guide
-
 ## SNES
 
 - [Estudos](SNES/)

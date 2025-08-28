@@ -1,5 +1,11 @@
 # NES
 
+## Material encontrado
+
+- https://nerdy-nights.nes.science (guia que utilizei de fato até o momento)
+- https://www.chibiakumas.com/6502/nesfamicom.php
+- https://www.nesdev.org/wiki/Programming_guide
+
 ## Anotações do guia nerdy nights
 
 https://nerdy-nights.nes.science
