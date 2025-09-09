@@ -230,4 +230,4 @@ attributeData:
 ; =============================================================================
 .segment "CHARS"
 	.org $0000 			; chr data will be loaded at $0000 address
-	.incbin "test8.chr"
+	.incbin "dick.chr"
