@@ -4,8 +4,9 @@
 
 - Desenhar o sprite no Aseprite, usando "color mode: indexed"
 - O sprite só pode ter 3 cores (a quarta cor é usada para transparência)
-- Importar o sprite como tilemap no Nexxt studio
-- Exportar o tilemap como um CHR de 8 bytes
+- Importar o sprite como tilemap no Nexxt studio (`import -> import as tileset`)
+- Exportar o tilemap como um CHR de 8 bytes (`file -> .chr -> save 8k A+B`)
+- Importar o arquivo CHR na seção de CHARS do código
 
 ## Usando sprites prontos
 
