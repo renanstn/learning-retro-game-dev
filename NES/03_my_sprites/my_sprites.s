@@ -26,7 +26,10 @@ spritesPointer: .res 2
 spriteTile: 	.res 1
 pointerLo: 		.res 1 	; used in background load loop
 pointerHi: 		.res 1	; used in background load loop
-
+currentFrame:   .res 1  ; used in sprite animation
+frameCounter:   .res 1  ; used in sprite animation
+tilePointer: 	.res 2  ; used in sprite animation
+isWalking: 		.res 1  ; used in sprite animation
 NUM_SPRITES 	= $06
 PLAYER_SPEED	= $01
 
@@ -138,6 +141,10 @@ LoadAttributeLoop:
 	sta spritesPointer + 1
 	lda #$04
 	sta spriteTile
+	lda #$00
+	sta currentFrame
+	sta frameCounter
+	sta isWalking
 
 ; Enable NMI and setup PPU ----------------------------------------------------
 finalSettings:
@@ -184,10 +191,26 @@ nmi:
 	jsr readController1
 	jsr readController2
 	jsr gameEngine
+	jsr updatePlayerAnimation
 	jsr updatePlayerSprites
 	rti
 
 ; Subroutines -----------------------------------------------------------------
+updatePlayerAnimation:
+	inc frameCounter
+	lda frameCounter
+	cmp #$08 		; animation speed
+	bne skipUpdatePlayerAnimation
+	; Set counter to zero again
+	lda #$00
+	sta frameCounter
+	; Change frame (0 ↔ 1)
+	lda currentFrame
+	eor #$01
+	sta currentFrame
+skipUpdatePlayerAnimation:
+	rts
+
 updatePlayerSprites:
 	ldy #$00 	; OAM index, incremented on every step
 	ldx #$00	; spriteXOffsets / spriteYOffsets index, incremented on every sprite
@@ -198,7 +221,18 @@ updatePlayerSpritesLoop:
 	sta (spritesPointer), y
 	iny
 
+	lda isWalking
+	cmp #$01
+	bne playerIdle
+	lda currentFrame
+	cmp #$01  	; Load sprite from bank 00 or 01, depending on currentFrame animation
+	beq loadSprite01
+playerIdle:
 	lda spriteTiles00, x
+	jmp loadContinue
+loadSprite01:
+	lda spriteTiles01, x
+loadContinue:
 	sta (spritesPointer), y
 	iny
 
@@ -229,6 +263,8 @@ movePlayerRight:
 	clc
 	adc #PLAYER_SPEED
 	sta playerX
+	lda #$01
+	sta isWalking
 movePlayerRightDone:
 
 movePlayerLeft:
@@ -240,8 +276,17 @@ movePlayerLeft:
 	sec
 	sbc #PLAYER_SPEED
 	sta playerX
+	lda #$01
+	sta isWalking
 movePlayerLeftDone:
 
+; Set isWalking = 00 if no buttons pressed
+	lda buttons1
+	beq noButtonsPressed
+	rts
+noButtonsPressed:
+	lda #$00
+	sta isWalking
 	rts
 
 readController1:
