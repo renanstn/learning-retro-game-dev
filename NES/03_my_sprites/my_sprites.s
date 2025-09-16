@@ -28,10 +28,12 @@ pointerLo: 		.res 1 	; used in background load loop
 pointerHi: 		.res 1	; used in background load loop
 currentFrame:   .res 1  ; used in sprite animation
 frameCounter:   .res 1  ; used in sprite animation
-tilePointer: 	.res 2  ; used in sprite animation
 isWalking: 		.res 1  ; used in sprite animation
+playerDir: 		.res 1
 NUM_SPRITES 	= $06
 PLAYER_SPEED	= $01
+DIR_RIGHT 		= $00
+DIR_LEFT 		= $01
 
 ; =============================================================================
 .segment "CODE"
@@ -145,6 +147,8 @@ LoadAttributeLoop:
 	sta currentFrame
 	sta frameCounter
 	sta isWalking
+	lda #DIR_RIGHT
+	sta playerDir
 
 ; Enable NMI and setup PPU ----------------------------------------------------
 finalSettings:
@@ -215,17 +219,19 @@ updatePlayerSprites:
 	ldy #$00 	; OAM index, incremented on every step
 	ldx #$00	; spriteXOffsets / spriteYOffsets index, incremented on every sprite
 updatePlayerSpritesLoop:
+	; --- Y ---
 	lda playerY
 	clc
 	adc spriteYOffsets, x
 	sta (spritesPointer), y
 	iny
 
+	; --- Tile ---
 	lda isWalking
 	cmp #$01
 	bne playerIdle
 	lda currentFrame
-	cmp #$01  	; Load sprite from bank 00 or 01, depending on currentFrame animation
+	cmp #$01  	; load sprite from bank 00 or 01, depending on currentFrame animation
 	beq loadSprite01
 playerIdle:
 	lda spriteTiles00, x
@@ -236,13 +242,31 @@ loadContinue:
 	sta (spritesPointer), y
 	iny
 
-	lda #$00
+	; --- Attrs ---
+	lda playerDir
+	cmp #DIR_LEFT
+	beq flipLeft
+	lda #%00000000
+	jmp attrDone
+flipLeft:
+	lda #%01000000
+attrDone:
 	sta (spritesPointer), y
 	iny
 
+	; --- X ---
+	lda playerDir
+	cmp #DIR_LEFT
+	beq useLeftOffset
 	lda playerX
 	clc
-	adc spriteXOffsets, x
+	adc spriteXOffsetsRight, x
+	jmp storeX
+useLeftOffset:
+	lda playerX
+	clc
+	adc spriteXOffsetsLeft, x
+storeX:
 	sta (spritesPointer), y
 	iny
 	inx
@@ -265,6 +289,8 @@ movePlayerRight:
 	sta playerX
 	lda #$01
 	sta isWalking
+	lda #DIR_RIGHT
+	sta playerDir
 movePlayerRightDone:
 
 movePlayerLeft:
@@ -278,6 +304,8 @@ movePlayerLeft:
 	sta playerX
 	lda #$01
 	sta isWalking
+	lda #DIR_LEFT
+	sta playerDir
 movePlayerLeftDone:
 
 ; Set isWalking = 00 if no buttons pressed
@@ -334,11 +362,14 @@ paletteData:
     .byte $0F, $0F, $0F, $0F   ; SPR pal 2
     .byte $0F, $0F, $0F, $0F   ; SPR pal 3
 
-spriteXOffsets:
-	.byte $00, $08, $00, $08, $00, $08, $00, $08
+spriteXOffsetsRight:
+	.byte $00, $08, $00, $08, $00, $08
+
+spriteXOffsetsLeft:
+    .byte $08, $00, $08, $00, $08, $00
 
 spriteYOffsets:
-	.byte $00, $00, $08, $08, $0F, $0F, $17, $17
+	.byte $00, $00, $08, $08, $0F, $0F
 
 spriteTiles00:
 	.byte $04, $05, $14, $15, $24, $25
