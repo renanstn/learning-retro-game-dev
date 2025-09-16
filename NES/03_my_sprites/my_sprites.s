@@ -27,7 +27,7 @@ spriteTile: 	.res 1
 pointerLo: 		.res 1 	; used in background load loop
 pointerHi: 		.res 1	; used in background load loop
 
-NUM_SPRITES 	= $08
+NUM_SPRITES 	= $06
 PLAYER_SPEED	= $01
 
 ; =============================================================================
@@ -198,7 +198,7 @@ updatePlayerSpritesLoop:
 	sta (spritesPointer), y
 	iny
 
-	lda spriteTiles, x
+	lda spriteTiles00, x
 	sta (spritesPointer), y
 	iny
 
@@ -295,8 +295,11 @@ spriteXOffsets:
 spriteYOffsets:
 	.byte $00, $00, $08, $08, $0F, $0F, $17, $17
 
-spriteTiles:
-	.byte $04, $05, $14, $15, $24, $25, $34, $35
+spriteTiles00:
+	.byte $04, $05, $14, $15, $24, $25
+
+spriteTiles01:
+	.byte $04, $05, $14, $15, $34, $35
 
 backgroundData:
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -343,4 +346,4 @@ attributeData:
 ; =============================================================================
 .segment "CHARS"
 	.org $0000 			; chr data will be loaded at $0000 address
-	.incbin "berg3.chr"
+	.incbin "berg4.chr"
