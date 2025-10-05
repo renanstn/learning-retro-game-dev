@@ -6,3 +6,5 @@ rgbgfx -u berg-screen.png -o berg.2bpp -t berg.tilemap && \
 rgbasm -o main.o main.asm && \
 rgblink -o berg.gb main.o && \
 rgbfix -v -p 0xFF berg.gb
+
+java -jar ../tools/Emulicious/Emulicious.jar berg.gb

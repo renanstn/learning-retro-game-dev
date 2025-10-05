@@ -11,3 +11,5 @@ rgbfix -v -p 0xFF berg.gb
 if [ "$1" == "--win" ]; then
     cp berg.gb /mnt/c/Users/renan/Downloads/
 fi
+
+java -jar ../tools/Emulicious/Emulicious.jar berg.gb
