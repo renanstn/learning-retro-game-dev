@@ -3,6 +3,8 @@
 | ⚠️ | Todos os estudos, scripts e ferramentas dessa seção foram feitos em Linux. |
 |----|---------------------------------------------------------------------------|
 
+Extensão do sublime text para trabalhar: RGBDS
+
 Fonte: https://gbdev.io/gb-asm-tutorial/index.html
 
 CPU code reference: https://rgbds.gbdev.io/docs/v0.8.0/gbz80.7

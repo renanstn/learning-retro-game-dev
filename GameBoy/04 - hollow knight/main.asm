@@ -42,7 +42,7 @@ ClearOam:
     ld [hli], a
     ld a, 0         ; Set object index
     ld [hli], a
-    ld a, 0 		; Set attributes
+    ld a, 0         ; Set attributes
     ld [hli], a
 
     ld a, 128 + 16  ; Set object Y position
@@ -64,10 +64,13 @@ ClearOam:
     ld a, %11100100
     ld [rOBP0], a
 
-    ; Initialize global variables ---------------------------------------------
+    ; Init variables ----------------------------------------------------------
     ld a, 0
+    ld [wFrameCounter], a
     ld [wCurKeys], a
     ld [wNewKeys], a
+    ld a, 1
+    ld [wPlayerDirection], a
 
 ; =============================================================================
 Main:
@@ -80,6 +83,7 @@ WaitVBlank2:
     cp 144
     jp c, WaitVBlank2
 
+    call IncrementFrameCounter
     call UpdateKeys
 
 ; Check if the left button is pressed
@@ -88,31 +92,52 @@ CheckLeft:
     and a, PADF_LEFT
     jp z, CheckRight
 MovePlayerToLeft:
-	; Head
+    ; Change direction
+    ld a, 0
+    ld [wPlayerDirection], a
+	; Move head
     ld a, [_OAMRAM + 1]
     dec a
     ld [_OAMRAM + 1], a
-    ; Legs
+    ; Move legs
     ld a, [_OAMRAM + 5]
     dec a
     ld [_OAMRAM + 5], a
+    ; Alternate legs frames
+	call AnimateLegs
+    ld a, [wAnimationFrame]
+    ld [_OAMRAM + 6], a
     jp Main
 
 ; Check the if the right button is pressed
 CheckRight:
     ld a, [wCurKeys]
     and a, PADF_RIGHT
-    jp z, Main
+    jp z, EndCheck
 MovePlayerToRight:
-	; Head
+    ; Change direction
+    ld a, 1
+    ld [wPlayerDirection], a
+	; Move head
     ld a, [_OAMRAM + 1]
     inc a
     ld [_OAMRAM + 1], a
-    ; Legs
+    ; Move legs
     ld a, [_OAMRAM + 5]
     inc a
     ld [_OAMRAM + 5], a
+    ; Alternate legs frames
+	call AnimateLegs
+    ld a, [wAnimationFrame]
+    ld [_OAMRAM + 6], a
     jp Main
+
+EndCheck:
+
+; If no keys pressed, load the idle legs
+	ld a, 1
+	ld [_OAMRAM + 6], a
+	jp Main
 
     ; End of main loop --------------------------------------------------------
     jp Main
@@ -130,6 +155,28 @@ Memcopy:
     ld a, b
     or a, c
     jp nz, Memcopy
+    ret
+
+; Animate legs ----------------------------------------------------------------
+AnimateLegs:
+	ld a, [wFrameCounter]
+	and %00001000 			; change each 8 frames
+	jr z, .frame0
+.frame1:
+	ld a, 2
+	jr .set
+.frame0:
+	ld a, 3
+.set:
+	ld [wAnimationFrame], a
+	ret
+
+
+; Increment frame counter -----------------------------------------------------
+IncrementFrameCounter:
+    ld a, [wFrameCounter]
+    inc a
+    ld [wFrameCounter], a
     ret
 
 ; Read player input -----------------------------------------------------------
@@ -180,6 +227,9 @@ Tilemap:
 TilemapEnd:
 
 ; =============================================================================
-SECTION "Input Variables", WRAM0
+SECTION "Vars", WRAM0
 wCurKeys: db
 wNewKeys: db
+wFrameCounter: db
+wAnimationFrame: db
+wPlayerDirection: db    ; 0: left, 1: right
