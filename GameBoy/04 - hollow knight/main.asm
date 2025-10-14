@@ -34,7 +34,7 @@ ClearOam:
     dec b
     jp nz, ClearOam
 
-; Initialize the player sprite in OAM -----------------------------------------
+; Initialize player sprites in OAM --------------------------------------------
     ld hl, _OAMRAM  ; Point to address
     ld a, 120 + 16  ; Set object Y position
     ld [hli], a
@@ -54,6 +54,15 @@ ClearOam:
     ld a, 0 		; Set attributes
     ld [hli], a
 
+    ld a, 126 + 16  ; Set object Y position
+    ld [hli], a
+    ld a, 0         ; Set object X position (out of screen)
+    ld [hli], a
+    ld a, 4         ; Set object index
+    ld [hli], a
+    ld a, 0         ; Set attributes
+    ld [hli], a
+
 	; Turn the LCD and objects on ---------------------------------------------
     ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON
     ld [rLCDC], a
@@ -69,6 +78,8 @@ ClearOam:
     ld [wFrameCounter], a
     ld [wCurKeys], a
     ld [wNewKeys], a
+    ld [wAttackTimer], a
+    ld [wPlayerIsAttacking], a
     ld a, 1
     ld [wPlayerDirection], a
 
@@ -85,8 +96,20 @@ WaitVBlank2:
 
     call IncrementFrameCounter
     call UpdateKeys
+    call UpdatePlayerFlip
+    call UpdateAttack
 
-; Check if the left button is pressed
+; Check if the attack buttom is pressed
+CheckAttack:
+    ld a, [wCurKeys]
+    and a, PADF_B
+    jp z, CheckLeft
+StartAttack:
+    ld a, 8                 ; Attack for 8 frames
+    ld [wAttackTimer], a
+    call SpawnAttack
+
+; Check if the left buttom is pressed
 CheckLeft:
     ld a, [wCurKeys]
     and a, PADF_LEFT
@@ -109,7 +132,7 @@ MovePlayerToLeft:
     ld [_OAMRAM + 6], a
     jp Main
 
-; Check the if the right button is pressed
+; Check the if the right buttom is pressed
 CheckRight:
     ld a, [wCurKeys]
     and a, PADF_RIGHT
@@ -135,11 +158,12 @@ MovePlayerToRight:
 EndCheck:
 
 ; If no keys pressed, load the idle legs
+LoadIdleLegs:
 	ld a, 1
 	ld [_OAMRAM + 6], a
 	jp Main
 
-    ; End of main loop --------------------------------------------------------
+; End of main loop ------------------------------------------------------------
     jp Main
 
 ; -----------------------------------------------------------------------------
@@ -171,12 +195,118 @@ AnimateLegs:
 	ld [wAnimationFrame], a
 	ret
 
+; Update player flip ----------------------------------------------------------
+UpdatePlayerFlip:
+    ld a, [wPlayerDirection]
+    cp 0
+    jr nz, .FacingRight
+.FacingLeft:
+    ld hl, _OAMRAM + 3      ; Head sprite attr
+    ld a, [hl]
+    or %00100000
+    ld [hl], a
+    ld hl, _OAMRAM + 7      ; Legs sprite attr
+    ld a, [hl]
+    or %00100000
+    ld [hl], a
+    ret
+.FacingRight:
+    ld hl, _OAMRAM + 3      ; Head sprite attr
+    ld a, [hl]
+    and %11011111
+    ld [hl], a
+    ld hl, _OAMRAM + 7      ; Legs sprite attr
+    ld a, [hl]
+    and %11011111
+    ld [hl], a
+    ret
 
 ; Increment frame counter -----------------------------------------------------
 IncrementFrameCounter:
     ld a, [wFrameCounter]
     inc a
     ld [wFrameCounter], a
+    ret
+
+; Spawn attack ----------------------------------------------------------------
+SpawnAttack:
+    ; Took body X and Y position as reference
+    ld a, [_OAMRAM + 4]
+    sub 2
+    ld c, a
+    ld a, [_OAMRAM + 5]
+    ld b, a
+
+    ; Calculate direction
+    ld a, [wPlayerDirection]
+    or a
+    jr nz, .AttackFacingRight
+
+.AttackFacinfLeft:
+    ld a, b
+    sub 8           ; Attack 8px to left
+    ld d, a
+    jr .Spawn
+
+.AttackFacingRight:
+    ld a, b
+    add 8           ; Attack 8px to right
+    ld d, a
+
+.Spawn:
+    ld hl, _OAMRAM + 8
+    ld a, c
+    ld [hli], a     ; Y
+    ld a, d
+    ld [hli], a     ; X
+
+    ld a, [wPlayerDirection]
+    or a
+    jr nz, .NoFlip
+
+.FlipAttackLeft:
+    ld a, [_OAMRAM + 11]
+    or %00100000
+    ld [_OAMRAM + 11], a
+    ret
+
+.NoFlip:
+    ld a, [_OAMRAM + 11]
+    and %11011111
+    ld [_OAMRAM + 11], a
+    ret
+
+; Update attack animation -----------------------------------------------------
+UpdateAttack:
+    ld a, [wAttackTimer]
+    or a
+    ret z               ; Do nothing if 0
+
+    dec a
+    ld [wAttackTimer], a
+    jp nz, .StillActive
+
+    ; Attack finished, remove sprite
+    ld hl, _OAMRAM + 8
+    ld a, 0
+    ld [hli], a         ; Y
+    ld [hli], a         ; X
+    ret
+
+.StillActive:
+    ; Move attack sprite depending on direction
+    ld a, [wPlayerDirection]
+    or a
+    jr nz, .MoveAttackRight
+.MoveAttackLeft:
+    ld a, [_OAMRAM + 9]
+    dec a
+    ld [_OAMRAM + 9], a
+    ret
+.MoveAttackRight:
+    ld a, [_OAMRAM + 9]
+    inc a
+    ld [_OAMRAM + 9], a
     ret
 
 ; Read player input -----------------------------------------------------------
@@ -218,7 +348,6 @@ UpdateKeys:
     ret
 
 ; =============================================================================
-
 Tiles:
 	INCBIN "test.2bpp"
 TilesEnd:
@@ -233,3 +362,5 @@ wNewKeys: db
 wFrameCounter: db
 wAnimationFrame: db
 wPlayerDirection: db    ; 0: left, 1: right
+wPlayerIsAttacking: db  ; 0: not attacking, 1: attacking
+wAttackTimer: db
