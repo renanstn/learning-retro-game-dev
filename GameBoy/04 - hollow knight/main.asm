@@ -1,5 +1,12 @@
 INCLUDE "hardware.inc"
 
+DEF ATTACK_SPRITE_X_OFFSET          EQU 9
+DEF ATTACK_SPRITE_ATTR_OFFSET       EQU 11
+DEF PLAYER_SPRITE_HEAD_X_OFFSET     EQU 1
+DEF PLAYER_SPRITE_LEGS_X_OFFSET     EQU 5
+DEF PLAYER_SPRITE_HEAD_ATTR_OFFSET  EQU 3
+DEF PLAYER_SPRITE_LEGS_ATTR_OFFSET  EQU 7
+
 SECTION "Header", ROM0[$100]
 	jp EntryPoint
 	ds $150 - @, 0 ; Make room for the header
@@ -99,9 +106,9 @@ WaitVBlank2:
     call UpdatePlayerFlip
     call UpdateAttack
 
-; Check if the attack buttom is pressed
+; Check if the attack buttom is just pressed
 CheckAttack:
-    ld a, [wCurKeys]
+    ld a, [wNewKeys]
     and a, PADF_B
     jp z, CheckLeft
 StartAttack:
@@ -119,13 +126,13 @@ MovePlayerToLeft:
     ld a, 0
     ld [wPlayerDirection], a
 	; Move head
-    ld a, [_OAMRAM + 1]
+    ld a, [_OAMRAM + PLAYER_SPRITE_HEAD_X_OFFSET]
     dec a
-    ld [_OAMRAM + 1], a
+    ld [_OAMRAM + PLAYER_SPRITE_HEAD_X_OFFSET], a
     ; Move legs
-    ld a, [_OAMRAM + 5]
+    ld a, [_OAMRAM + PLAYER_SPRITE_LEGS_X_OFFSET]
     dec a
-    ld [_OAMRAM + 5], a
+    ld [_OAMRAM + PLAYER_SPRITE_LEGS_X_OFFSET], a
     ; Alternate legs frames
 	call AnimateLegs
     ld a, [wAnimationFrame]
@@ -142,13 +149,13 @@ MovePlayerToRight:
     ld a, 1
     ld [wPlayerDirection], a
 	; Move head
-    ld a, [_OAMRAM + 1]
+    ld a, [_OAMRAM + PLAYER_SPRITE_HEAD_X_OFFSET]
     inc a
-    ld [_OAMRAM + 1], a
+    ld [_OAMRAM + PLAYER_SPRITE_HEAD_X_OFFSET], a
     ; Move legs
-    ld a, [_OAMRAM + 5]
+    ld a, [_OAMRAM + PLAYER_SPRITE_LEGS_X_OFFSET]
     inc a
-    ld [_OAMRAM + 5], a
+    ld [_OAMRAM + PLAYER_SPRITE_LEGS_X_OFFSET], a
     ; Alternate legs frames
 	call AnimateLegs
     ld a, [wAnimationFrame]
@@ -201,21 +208,21 @@ UpdatePlayerFlip:
     cp 0
     jr nz, .FacingRight
 .FacingLeft:
-    ld hl, _OAMRAM + 3      ; Head sprite attr
+    ld hl, _OAMRAM + PLAYER_SPRITE_HEAD_ATTR_OFFSET
     ld a, [hl]
     or %00100000
     ld [hl], a
-    ld hl, _OAMRAM + 7      ; Legs sprite attr
+    ld hl, _OAMRAM + PLAYER_SPRITE_LEGS_ATTR_OFFSET
     ld a, [hl]
     or %00100000
     ld [hl], a
     ret
 .FacingRight:
-    ld hl, _OAMRAM + 3      ; Head sprite attr
+    ld hl, _OAMRAM + PLAYER_SPRITE_HEAD_ATTR_OFFSET
     ld a, [hl]
     and %11011111
     ld [hl], a
-    ld hl, _OAMRAM + 7      ; Legs sprite attr
+    ld hl, _OAMRAM + PLAYER_SPRITE_LEGS_ATTR_OFFSET
     ld a, [hl]
     and %11011111
     ld [hl], a
@@ -265,19 +272,20 @@ SpawnAttack:
     jr nz, .NoFlip
 
 .FlipAttackLeft:
-    ld a, [_OAMRAM + 11]
+    ld a, [_OAMRAM + ATTACK_SPRITE_ATTR_OFFSET]
     or %00100000
-    ld [_OAMRAM + 11], a
+    ld [_OAMRAM + ATTACK_SPRITE_ATTR_OFFSET], a
     ret
 
 .NoFlip:
-    ld a, [_OAMRAM + 11]
+    ld a, [_OAMRAM + ATTACK_SPRITE_ATTR_OFFSET]
     and %11011111
-    ld [_OAMRAM + 11], a
+    ld [_OAMRAM + ATTACK_SPRITE_ATTR_OFFSET], a
     ret
 
 ; Update attack animation -----------------------------------------------------
 UpdateAttack:
+    ; Check if the attack animation is over
     ld a, [wAttackTimer]
     or a
     ret z               ; Do nothing if 0
@@ -299,14 +307,14 @@ UpdateAttack:
     or a
     jr nz, .MoveAttackRight
 .MoveAttackLeft:
-    ld a, [_OAMRAM + 9]
+    ld a, [_OAMRAM + ATTACK_SPRITE_X_OFFSET]
     dec a
-    ld [_OAMRAM + 9], a
+    ld [_OAMRAM + ATTACK_SPRITE_X_OFFSET], a
     ret
 .MoveAttackRight:
-    ld a, [_OAMRAM + 9]
+    ld a, [_OAMRAM + ATTACK_SPRITE_X_OFFSET]
     inc a
-    ld [_OAMRAM + 9], a
+    ld [_OAMRAM + ATTACK_SPRITE_X_OFFSET], a
     ret
 
 ; Read player input -----------------------------------------------------------
