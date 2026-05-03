@@ -11,6 +11,7 @@ em plataformas antigas como GBA, NES e SNES.
 ## NES
 
 - [Estudos](NES/)
+- [Notas](NES/README.md)
 
 ## SNES
 
