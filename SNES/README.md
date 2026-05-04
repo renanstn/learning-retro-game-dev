@@ -17,3 +17,10 @@
 - http://nuclear.mutantstargoat.com/articles/snes_notes/refs/snes_dev_manual1.pdf (o manual oficial da Nintendo)
 - https://wiki.superfamicom.org/
 - https://ersanio.gitbook.io/assembly-for-the-snes/
+
+## Compilando e gerando uma ROM
+
+```
+ca65 --cpu 65816 -o output.o game.asm && \
+ld65 -C lorom.cfg output.o -o game.smc
+```
