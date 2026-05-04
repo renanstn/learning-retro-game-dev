@@ -8,6 +8,7 @@
 - https://blog.wesleyac.com/posts/snes-dev-1-getting-started
 - https://www.chibiakumas.com/6502/snes.php
 - https://georgjz.github.io/snesaa01/
+- https://wiki.superfamicom.org/asm-tutorial-part-1
 
 ## Referências técnicas
 
