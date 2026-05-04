@@ -9,6 +9,7 @@
 - https://www.chibiakumas.com/6502/snes.php
 - https://georgjz.github.io/snesaa01/
 - https://wiki.superfamicom.org/asm-tutorial-part-1
+- https://nesdoug.com/2020/05/14/snes-example-1/
 
 ## Referências técnicas
 
