@@ -20,6 +20,10 @@
 - https://wiki.superfamicom.org/
 - https://ersanio.gitbook.io/assembly-for-the-snes/
 
+## Referências criativas
+
+- https://www.youtube.com/watch?v=EBLze4PXX2U
+
 ## Compilando e gerando uma ROM
 
 ```
