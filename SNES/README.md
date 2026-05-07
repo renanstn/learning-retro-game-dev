@@ -24,6 +24,10 @@
 
 - https://www.youtube.com/watch?v=EBLze4PXX2U
 
+## Ferramentas
+
+- Conversor de sprites: https://github.com/Optiroc/SuperFamiconv
+
 ## Compilando e gerando uma ROM
 
 ```
