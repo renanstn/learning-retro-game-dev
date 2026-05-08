@@ -16,6 +16,7 @@ Main:
     plb                 ; sets the Data Bank Register to the same as the Program Bank
 
     A8                  ; put the A register in 8 bit mode
+; ------------------------------------------------------------------------------------
     stz CGADD           ; $2121 set color address to 0
                         ; HERE we're indicating that we will paint the palette index 0
     lda #$1f            ; palette low byte gggrrrrr
@@ -23,7 +24,7 @@ Main:
     sta CGDATA          ; $2122 - write the low byte
     lda #$00            ; palette high byte -bbbbbgg
     sta CGDATA          ; $2122 - write the high byte to the palette
-
+; ------------------------------------------------------------------------------------
 ; turn the screen on (end forced blank)
 	lda #FULL_BRIGHT    ; $0f - full brightness
 	sta INIDISP         ; $2100 - effectively turns the screen ON
