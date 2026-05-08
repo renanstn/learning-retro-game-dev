@@ -1,11 +1,5 @@
 ; macros for SNES
 
-; mesen-s can use wdm is as a breakpoint
-; for debugging purposes
-.macro WDM_BREAK number
-	.byte $42, number
-.endmacro
-
 .macro A8
 	sep #$20
 .endmacro

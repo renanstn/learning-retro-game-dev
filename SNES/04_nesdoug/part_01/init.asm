@@ -7,13 +7,11 @@
 
 .segment "CODE"
 NMI:
-	bit $4210	; it is required to read this register
-				; in the NMI handler
+	bit $4210	; it is required to read this register in the NMI handler
 	inc in_nmi	; size of A doesn't matter
 	rti
 IRQ:
-	bit $4211	; it is required to read this register
-				; in the IRQ handler
+	bit $4211	; it is required to read this register in the IRQ handler
 IRQ_end:
 	rti
 
