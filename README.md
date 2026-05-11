@@ -20,6 +20,7 @@ em plataformas antigas como GBA, NES e SNES.
 ## Extensões úteis de VS Code
 
 - RGBDS Z80 (para Game Boy)
+- 6502 Assembler (para SNES)
 
 ## Ferramentas online úteis
 
