@@ -42,3 +42,13 @@ Then, for channel `0`, you write `#1` to `$420b` to start the transfer. This loc
 > with the same 420b write, they are performed sequentially, one at a time.
 
 Outros exemplos de DMA transfer: https://github.com/nesdoug/SNES_02/blob/master/DMA_Examples.txt
+
+## Part 03: Backgrounds
+
+> https://nesdoug.com/2020/05/16/backgrounds/
+
+Comando usado para converter a imagem para o formato do SNES
+
+```shell
+.\superfamiconv.exe -v --in-image pica-snes.png --out-palette snes.palette --out-tiles snes.tiles --out-map snes.map --out-tiles-image tiles.png
+```
