@@ -27,6 +27,7 @@
 ## Ferramentas
 
 - Conversor de sprites: https://github.com/Optiroc/SuperFamiconv
+- Fazer músicas: https://github.com/nathancassano/snesgss
 
 ## Compilando e gerando uma ROM
 
