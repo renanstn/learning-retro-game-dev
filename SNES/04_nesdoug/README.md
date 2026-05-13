@@ -47,8 +47,10 @@ Outros exemplos de DMA transfer: https://github.com/nesdoug/SNES_02/blob/master/
 
 > https://nesdoug.com/2020/05/16/backgrounds/
 
+> A imagem que formará o background para essa lição deverá ter **256x256** de dimensão.
+
 Comando usado para converter a imagem para o formato do SNES
 
 ```shell
-.\superfamiconv.exe -v --in-image pica-snes.png --out-palette snes.palette --out-tiles snes.tiles --out-map snes.map --out-tiles-image tiles.png
+.\superfamiconv.exe -v --mode snes --in-image pica-3.png --out-palette snes.palette --out-tiles snes.tiles --out-map snes.map --out-tiles-image tiles.png
 ```

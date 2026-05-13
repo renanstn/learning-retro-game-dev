@@ -1,6 +1,4 @@
 ; init code for SNES
-; much borrowed from Damian Yerrick
-; some borrowed from Oziphantom
 
 .p816
 .smart

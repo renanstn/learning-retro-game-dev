@@ -32,6 +32,7 @@ Main:
 
 ; DMA from Tiles do VRAM ------------------------------------------------------
     lda #V_INC_1        ; the value $80
+    ; each write will go +1 the previous write address
     sta VMAIN           ; $2115 = set the increment mode +1
     ldx #$0000
     stx VMADDL          ; $2116 set an address in the vram of $0000
@@ -68,7 +69,7 @@ Main:
     sta $420b           ; start transfer
 
     ; -------------------------------------------------------------------------
-    lda #1              ; mode 1, tilesize 8x8 all
+    lda #1              ; BG mode 1, tilesize 8x8 all
     sta BGMODE
 
     stz BG12NBA         ; $210b tiles for BG 1+2 at VRAM address $0000
