@@ -8,3 +8,4 @@ Ferramentas necessárias
 - `Snes9x-1.63-x86_64.AppImage`: Emulador de SNES. O Mesen é mais recomendado, mas ele não roda no Linux, então baixei este também
 - `superfamiconv_win64_v0.11.0.zip`: Conversor de imagens para múltiplas
 plataformas de retro gaming
+- `ucon64`: Canivete suíço das ROMS, para validar checksun (versões windows e linux)
