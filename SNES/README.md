@@ -29,6 +29,7 @@
 - Conversor de sprites: https://github.com/Optiroc/SuperFamiconv
 - Fazer músicas: https://github.com/nathancassano/snesgss
 - Tutorial Furnace: https://www.youtube.com/watch?v=Q37XuOLz0jw
+- Reduzir uma imagem para uma paleta: https://lospec.com/palette-quantizer/
 
 ## Compilando e gerando uma ROM
 

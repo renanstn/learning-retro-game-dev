@@ -54,3 +54,34 @@ Comando usado para converter a imagem para o formato do SNES
 ```shell
 .\superfamiconv.exe -v --mode snes --in-image pica-3.png --out-palette snes.palette --out-tiles snes.tiles --out-map snes.map --out-tiles-image tiles.png
 ```
+
+Funcionando!
+
+## Part 04: Layers
+
+Ordem de layers do `mode 1`:
+
+```
+(top)
+Sprites with priority 3
+BG1 tiles with priority 1
+BG2 tiles with priority 1
+Sprites with priority 2
+BG1 tiles with priority 0
+BG2 tiles with priority 0
+Sprites with priority 1
+BG3 tiles with priority 1
+Sprites with priority 0
+BG3 tiles with priority 0
+(bottom)
+```
+
+> Lembrando que, tudo na cor `#0` em um tile, será transparente!
+
+Converti uma foto minha com o comando:
+
+```shell
+.\superfamiconv.exe -v --mode snes --in-image eu-quantized.png --out-palette snes.palette --out-tiles snes.tiles --out-map snes.map --out-tiles-image tiles.png
+```
+
+Ferramenta útil: https://lospec.com/palette-quantizer/
