@@ -85,3 +85,17 @@ Converti uma foto minha com o comando:
 ```
 
 Ferramenta útil: https://lospec.com/palette-quantizer/
+
+Utilizei a foto em um dos layers, funcionou!
+
+Para a segunda imagem, o fundo dela precisa ser transparente.
+A cor de fundo atual é `#e1f2e9`.
+
+Converti a foto indicando a transparência com o comando:
+
+```shell
+.\superfamiconv.exe -v --mode snes --in-image fodase-quantized.png --color-zero #e1f2e9 --out-palette snes2.palette --out-tiles snes2.tiles --out-map snes2.map --out-tiles-image tiles2.png
+```
+
+Detalhe interessante, o material bruto importado excedeu o espaço do `RODATA1`.
+Então precisei colocá-los no `RODATA2`.
