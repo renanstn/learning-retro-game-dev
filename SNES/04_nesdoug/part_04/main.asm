@@ -99,7 +99,7 @@ Main:
     sta $4301           ; destination: vram data
     ldx #.loword(Tiles2)
     stx $4302           ; source
-    lda #^Tiles
+    lda #^Tiles2
     sta $4304           ; bank
     ldx #(End_Tiles2-Tiles2)
     stx $4305           ; length
@@ -116,7 +116,7 @@ Main:
     sta $4301           ; destination, vram data
     ldx #.loword(Tilemap2)
     stx $4302           ; source
-    lda #^Tilemap
+    lda #^Tilemap2
     sta $4304           ; bank
     ldx #(End_Tilemap2-Tilemap2)
     stx $4305           ; length
@@ -127,17 +127,23 @@ Main:
     lda #1              ; BG mode 1, tilesize 8x8 all
     sta BGMODE
 
-    stz BG12NBA         ; $210b tiles for BG 1+2 at VRAM address $0000
+    ;lda #$40
+    lda #$04
+    sta BG12NBA
+    ;stz BG12NBA         ; $210b tiles for BG 1+2 at VRAM address $0000
     ;lda #$03
     ;sta BG24NBA
 
-    lda #$60            ; bg1 map at VRAM address $6000
+    ;lda #$60            ; bg1 map at VRAM address $6000
+    lda #$68            ; bg1 map at VRAM address $6000
     sta BG1SC
-    lda #$68            ; bg2 map at VRAM address $6800
+    ;lda #$68            ; bg2 map at VRAM address $6800
+    lda #$60            ; bg2 map at VRAM address $6800
     sta BG2SC
 
     ;lda #BG1_ON         ; $01 = only bg 1 is active
-    lda #BG_ALL_ON       ; all bgs active
+    ;lda #BG_ALL_ON      ; all bgs active
+    lda #%00000011       ; bg 1 and 2 active
     sta TM
 
 ; Turn the screen on (end forced blank) ---------------------------------------
