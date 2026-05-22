@@ -94,7 +94,7 @@ A cor de fundo atual é `#e1f2e9`.
 Converti a foto indicando a transparência com o comando:
 
 ```shell
-.\superfamiconv.exe -v --mode snes --in-image fodase-quantized-full-size.png --color-zero e1f2e9 --out-palette snes2.palette --out-tiles snes2.tiles --out-map snes2.map --out-tiles-image tiles2.png
+.\superfamiconv.exe -v --mode snes --in-image fodase-quantized-full-size.png --out-palette snes_02.palette --out-tiles snes_02.tiles --out-map snes_02.map --out-tiles-image tiles2.png --out-scaled-image image2.png
 ```
 
 Detalhe interessante, o material bruto importado excedeu o espaço do `RODATA1`.
@@ -131,3 +131,9 @@ Esses registradores são o mapa da memória gráfica do SNES para backgrounds.
   - Formato: `AAAAAASS`
     - `AAAAAA` -> Endereço
     - `SS` -> Tamanho
+
+A paleta de cores do BG2 ficou toda fudida, preciso gerar o map do BG2 apontando para a mesma paleta usada no BG1:
+
+```shell
+.\superfamiconv.exe tiles -v --mode snes -i "fodase-quantized-full-size-right-colors.png" --in-palette "snes_01.pal" -o snes_02.chr
+```

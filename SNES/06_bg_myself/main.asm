@@ -69,75 +69,16 @@ Main:
     lda #1
     sta $420b           ; start transfer
 
-; DMA from BG_Palette2 to CGRAM -----------------------------------------------
-    ;lda #$60            ; calculated position of the next palette
-    ;                    ; first palette has 192 bytes / 2 = 96 colors
-    ;sta CGADD
-    ;
-    ;stz $4300           ; transfer mode 0 = 1 register write once
-    ;lda #$22            ; $2122
-    ;sta $4301           ; destination, CGRAM data
-    ;ldx #.loword(BG_Palette2)
-    ;stx $4302           ; source
-    ;lda #^BG_Palette2
-    ;sta $4304           ; bank
-    ;ldx #(End_BG_Palette2-BG_Palette2)
-    ;stx $4305           ; length
-    ;lda #1
-    ;sta $420b           ; start DMA, channel 0
-
-; DMA from Tiles2 do VRAM -----------------------------------------------------
-    ;lda #V_INC_1        ; the value $80
-    ;; each write will go +1 the previous write address
-    ;sta VMAIN           ; $2115 = set the increment mode +1
-    ;ldx #$4000
-    ;stx VMADDL          ; set an address in the vram
-    ;
-    ;lda #1
-    ;sta $4300           ; transfer mode, 2 registers 1 write
-    ;                    ; $2118 and $2119 are a pair Low/High
-    ;lda #$18            ; $2118
-    ;sta $4301           ; destination: vram data
-    ;ldx #.loword(Tiles2)
-    ;stx $4302           ; source
-    ;lda #^Tiles2
-    ;sta $4304           ; bank
-    ;ldx #(End_Tiles2-Tiles2)
-    ;stx $4305           ; length
-    ;lda #1
-    ;sta $420b           ; start transfer
-
-; DMA from Tilemap2 to VRAM ---------------------------------------------------
-    ;ldx #$6800
-    ;stx VMADDL          ; set an address in the vram
-    ;
-    ;lda #1
-    ;sta $4300           ; transfer mode, 2 registers 1 write
-    ;lda #$18            ; $2118
-    ;sta $4301           ; destination, vram data
-    ;ldx #.loword(Tilemap2)
-    ;stx $4302           ; source
-    ;lda #^Tilemap2
-    ;sta $4304           ; bank
-    ;ldx #(End_Tilemap2-Tilemap2)
-    ;stx $4305           ; length
-    ;lda #1
-    ;sta $420b           ; start transfer
-
     ; -------------------------------------------------------------------------
     lda #1              ; BG mode 1, tilesize 8x8 all
     sta BGMODE
 
-    lda #$04            ; Where BG1 and BG2 begins (in bit mask format)
-    sta BG12NBA
+    stz BG12NBA         ; $210b tiles for BG 1+2 at VRAM address $0000
 
-    lda #$68            ; bg1 map at VRAM address $6800
+    lda #$60            ; bg1 map at VRAM address $6000
     sta BG1SC
 
-    lda #$60            ; bg2 map at VRAM address $6000
-    sta BG2SC
-
-    lda #%00000011       ; bg 1 and 2 active
+    lda #BG1_ON         ; $01 = only bg 1 is active
     sta TM
 
 ; Turn the screen on (end forced blank) ---------------------------------------
@@ -153,28 +94,13 @@ Infinite_Loop:
 .segment "RODATA1"
 
 BG_Palette:
-.incbin "snes_01.pal"
+.incbin "image.pal"
 End_BG_Palette:
 
 Tiles:
-.incbin "snes_01.chr"
+.incbin "image.chr"
 End_Tiles:
 
 Tilemap:
-.incbin "snes_01.map"
+.incbin "image.map"
 End_Tilemap:
-
-; -----------------------------------------------------------------------------
-.segment "RODATA2"
-
-BG_Palette2:
-.incbin "snes_02.palette"
-End_BG_Palette2:
-
-Tiles2:
-.incbin "snes_02.chr"
-End_Tiles2:
-
-Tilemap2:
-.incbin "snes_02.map"
-End_Tilemap2:
