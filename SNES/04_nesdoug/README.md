@@ -78,62 +78,16 @@ BG3 tiles with priority 0
 
 > Lembrando que, tudo na cor `#0` em um tile, será transparente!
 
-Converti uma foto minha com o comando:
+Aqui eu fiz tudo usando aseprite e a ferramente M1TE.
 
-```shell
-.\superfamiconv.exe -v --mode snes --in-image eu-quantized.png --out-palette snes.palette --out-tiles snes.tiles --out-map snes.map --out-tiles-image tiles.png
-```
-
-Ferramenta útil: https://lospec.com/palette-quantizer/
-
-Utilizei a foto em um dos layers, funcionou!
-
-Para a segunda imagem, o fundo dela precisa ser transparente.
-A cor de fundo atual é `#e1f2e9`.
-
-Converti a foto indicando a transparência com o comando:
-
-```shell
-.\superfamiconv.exe -v --mode snes --in-image fodase-quantized-full-size.png --out-palette snes_02.palette --out-tiles snes_02.tiles --out-map snes_02.map --out-tiles-image tiles2.png --out-scaled-image image2.png
-```
-
-Detalhe interessante, o material bruto importado excedeu o espaço do `RODATA1`.
-Então precisei colocá-los no `RODATA2`.
-
-O exemplo já está funcional, mas aqui eu fiz uma cagada que vale nota:
-- Eu carreguei o que deveria ser o BACKGROUND (minha foto) no layer `BG1`
-- Eu carreguei o que deveria ser o FOREGOUND (a imagem com transparência) no layer `BG2`
-> Isso deveria ser feito invertido. Pois o BG2 fica sobre o BG1.
-
-Para arrumar essa cagada, eu mexi nessa seção:
-
-```asm
-lda #$04
-sta BG12NBA
-
-lda #$68
-sta BG1SC
-
-lda #$60
-sta BG2SC
-```
-
-Esses registradores são o mapa da memória gráfica do SNES para backgrounds.
-
-- `BG12NBA` -> `Background 1 and 2` -> Indica onde estão os respectivos backgrounds
-  - Formato: `BBBB AAAA`
-    - `AAAA` -> Tiles do BG1
-    - `BBBB` -> Tiles do BG2
-  - Eu coloquei o valor `$04` -> `%01000000` -> `0100 0000`
-    - Cada unidade vale 1000 bytes
-    - Logo, eu indiquei que o BG1 começa em `$0000`, e o BG2 começa em `$4000`
-- `BG1SC` e `BG1SC` -> `Background 1 and 2 Screen Configuration` -> Endereço do tilemap
-  - Formato: `AAAAAASS`
-    - `AAAAAA` -> Endereço
-    - `SS` -> Tamanho
-
-A paleta de cores do BG2 ficou toda fudida, preciso gerar o map do BG2 apontando para a mesma paleta usada no BG1:
-
-```shell
-.\superfamiconv.exe tiles -v --mode snes -i "fodase-quantized-full-size-right-colors.png" --in-palette "snes_01.pal" -o snes_02.chr
-```
+- Primeiro eu criei uma palette no aseprite, color mode -> indexed. Exportei
+- Depois eu criei um sprite, apliquei a palette, color mode -> indexed. Exportei
+- Depois eu criei outro sprite, apliquei a palette, color mode -> indexed. Exportei
+- Carreguei a palette no M1TE usando a imagem que eu exportei
+- Carreguei os tiles do sprite 1 no M1TE, com a palette selecionada
+- Coloquei o "cursor" dos tiles logo adiante, e carreguei o sprite 2 no M1TE
+- Pintei o desenho no map, salvei
+- Mudei o BG para #2, pintei o outro sprite, salvei
+- Exportei a palette
+- Exportei os tiles
+- Deu certo.
