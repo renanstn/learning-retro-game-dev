@@ -91,3 +91,7 @@ Aqui eu fiz tudo usando aseprite e a ferramente M1TE.
 - Exportei a palette
 - Exportei os tiles
 - Deu certo.
+
+## Pausa
+
+O tutorial está ótimo, mas eu meio que enjoei de seguir este guia passo a passo, e a partir deste ponto vou partir para o projeto 07, e tentar de fato criar algo jogável eu mesmo.
