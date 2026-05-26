@@ -9,8 +9,52 @@
 ; -----------------------------------------------------------------------------
 .segment "ZEROPAGE"
 
+PlayerX:       .res 1
+PlayerY:       .res 1
 ; -----------------------------------------------------------------------------
 .segment "CODE"
+
+InitPlayer:
+    AXY8
+    lda #120
+    sta PlayerX
+    lda #184
+    sta PlayerY
+    rts
+
+DrawPlayer:
+    AXY8
+    ldx #0      ; metasprite index
+    ldy #0      ; OAM index
+@Loop:
+    ; X
+    lda MetaSprite, x
+    clc
+    adc PlayerX
+    sta OAM_BUFFER, y
+    inx
+    iny
+    ; Y
+    lda MetaSprite, x
+    clc
+    adc PlayerY
+    sta OAM_BUFFER, y
+    inx
+    iny
+    ; TILE
+    lda MetaSprite, x
+    sta OAM_BUFFER, y
+    inx
+    iny
+    ; ATTR
+    lda MetaSprite, x
+    sta OAM_BUFFER, y
+    inx
+    iny
+    ; Check end
+    cpx #MetaSpriteSize
+    bcc @Loop
+    rts
 
 ; Enters here in forced blank -------------------------------------------------
 Main:
@@ -34,13 +78,6 @@ Main:
     stx $4305           ; length
     lda #1
     sta $420b           ; start DMA, channel 0
-
-; COPY sprites to sprite buffer
-	BLOCK_MOVE (End_Sprite-Sprite), Sprite, OAM_BUFFER
-	A8
-
-; DMA from OAM_BUFFER to the OAM RAM
-	jsr DMA_OAM
 
 ; DMA from Sprite Palette to CGRAM --------------------------------------------
     lda #$80
@@ -116,6 +153,13 @@ Main:
     lda #1
     sta $420b           ; start transfer
 
+; Draw our character using metasprites ----------------------------------------
+	jsr InitPlayer
+	jsr DrawPlayer
+
+; DMA from OAM_BUFFER to the OAM RAM ------------------------------------------
+	jsr DMA_OAM
+
 ; Screen mode and other configs -----------------------------------------------
     lda #2              ;sprite tiles at $4000
 	sta OBSEL
@@ -164,14 +208,16 @@ OB_Tiles:
 .incbin "sprite_tiles.chr"
 End_OB_Tiles:
 
-Sprite:
-.byte $80, $A0, $00, SPR_PRIOR_2
-.byte $88, $A0, $01, SPR_PRIOR_2
-.byte $80, $A8, $10, SPR_PRIOR_2
-.byte $88, $A8, $11, SPR_PRIOR_2
-.byte $80, $B0, $20, SPR_PRIOR_2
-.byte $88, $B0, $21, SPR_PRIOR_2
-.byte $90, $B0, $22, SPR_PRIOR_2
-.byte $88, $B8, $31, SPR_PRIOR_2
-.byte $90, $B8, $32, SPR_PRIOR_2
-End_Sprite:
+MetaSprite:
+.byte $F8, $E8, $00, SPR_PRIOR_2
+.byte $00, $E8, $01, SPR_PRIOR_2
+.byte $F8, $F0, $10, SPR_PRIOR_2
+.byte $00, $F0, $11, SPR_PRIOR_2
+.byte $F8, $F8, $20, SPR_PRIOR_2
+.byte $00, $F8, $21, SPR_PRIOR_2
+.byte $08, $F8, $22, SPR_PRIOR_2
+.byte $00, $00, $31, SPR_PRIOR_2
+.byte $08, $00, $32, SPR_PRIOR_2
+End_MetaSprite:
+
+MetaSpriteSize = End_MetaSprite - MetaSprite
