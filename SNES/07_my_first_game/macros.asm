@@ -41,3 +41,48 @@
 	.byte $54, ^dst_addr, ^src_addr
 	plb
 .endmacro
+
+.macro DMA_CGRAM destination, source, size
+    stz $4300               ; transfer mode 0 = 1 register write once
+
+    lda #destination
+    sta $4301               ; destination
+
+    ldx #.loword(source)
+    stx $4302               ; source
+
+    lda #^source
+    sta $4304               ; bank
+
+    ldx #size
+    stx $4305               ; length
+
+    lda #1
+    sta $420B               ; start DMA, channel 0
+.endmacro
+
+.macro DMA_VRAM destination, source, size
+    lda #V_INC_1
+    sta VMAIN               ; each write will go +1 the previous write address
+
+    ldx #destination
+    stx VMADDL
+
+    lda #1
+    sta $4300               ; transfer mode, 2 registers 1 write
+
+    lda #$18
+    sta $4301
+
+    ldx #.loword(source)
+    stx $4302               ; source
+
+    lda #^source
+    sta $4304               ; bank
+
+    ldx #size
+    stx $4305               ; length
+
+    lda #1
+    sta $420B               ; start DMA, channel 0
+.endmacro

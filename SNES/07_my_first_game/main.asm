@@ -61,93 +61,23 @@ Main:
 ; DMA from BG Palette to CGRAM ------------------------------------------------
     A8                  ; put the A register in 8 bit mode
     stz CGADD           ; point to CGRAM address zero
-
-    stz $4300           ; transfer mode 0 = 1 register write once
-    lda #$22            ; $2122
-    sta $4301           ; destination, CGRAM data
-    ldx #.loword(BG_Palette)
-    stx $4302           ; source
-    lda #^BG_Palette
-    sta $4304           ; bank
-    ldx #(End_BG_Palette-BG_Palette)
-    stx $4305           ; length
-    lda #1
-    sta $420b           ; start DMA, channel 0
+    DMA_CGRAM $22, BG_Palette, (End_BG_Palette-BG_Palette)
 
 ; DMA from Sprite Palette to CGRAM --------------------------------------------
     lda #$80
     sta CGADD           ; point to CGRAM address zero
-
-    stz $4300           ; transfer mode 0 = 1 register write once
-    lda #$22            ; $2122
-    sta $4301           ; destination, CGRAM data
-    ldx #.loword(OB_Palette)
-    stx $4302           ; source
-    lda #^OB_Palette
-    sta $4304           ; bank
-    ldx #(End_OB_Palette-OB_Palette)
-    stx $4305           ; length
-    lda #1
-    sta $420b           ; start DMA, channel 0
+    DMA_CGRAM $22, OB_Palette, (End_OB_Palette-OB_Palette)
 
 ; DMA from Bg Tiles do VRAM ---------------------------------------------------
-    lda #V_INC_1        ; the value $80
-    ; each write will go +1 the previous write address
-    sta VMAIN           ; $2115 = set the increment mode +1
-    ldx #$0000
-    stx VMADDL          ; $2116 set an address in the vram of $0000
-
-    lda #1
-    sta $4300           ; transfer mode, 2 registers 1 write
-                        ; $2118 and $2119 are a pair Low/High
-    lda #$18            ; $2118
-    sta $4301           ; destination: vram data
-    ldx #.loword(BG_Tiles)
-    stx $4302           ; source
-    lda #^BG_Tiles
-    sta $4304           ; bank
-    ldx #(End_BG_Tiles-BG_Tiles)
-    stx $4305           ; length
-    lda #1
-    sta $420b           ; start transfer
+    DMA_VRAM $0000, BG_Tiles, (End_BG_Tiles-BG_Tiles)
 
 ; DMA from Sprite Tiles do VRAM -----------------------------------------------
-    lda #V_INC_1
-    sta VMAIN           ; $2115 = set the increment mode +1
-    ldx #$4000
-    stx VMADDL          ; $2116 set an address in the vram
-
-    lda #1
-    sta $4300           ; transfer mode, 2 registers 1 write
-                        ; $2118 and $2119 are a pair Low/High
-    lda #$18            ; $2118
-    sta $4301           ; destination: vram data
-    ldx #.loword(OB_Tiles)
-    stx $4302           ; source
-    lda #^OB_Tiles
-    sta $4304           ; bank
-    ldx #(End_OB_Tiles-OB_Tiles)
-    stx $4305           ; length
-    lda #1
-    sta $420b           ; start transfer
+    DMA_VRAM $4000, OB_Tiles, (End_OB_Tiles-OB_Tiles)
 
 ; DMA from BG Tilemap to VRAM -------------------------------------------------
-    ldx #$6000
-    stx VMADDL          ; $2116 set an address in the vram of $6000
+    DMA_VRAM $6000, BG_Tilemap, (End_BG_Tilemap-BG_Tilemap)
 
-    lda #1
-    sta $4300           ; transfer mode, 2 registers 1 write
-    lda #$18            ; $2118
-    sta $4301           ; destination, vram data
-    ldx #.loword(BG_Tilemap)
-    stx $4302           ; source
-    lda #^BG_Tilemap
-    sta $4304           ; bank
-    ldx #(End_BG_Tilemap-BG_Tilemap)
-    stx $4305           ; length
-    lda #1
-    sta $420b           ; start transfer
-
+; Init player vars ------------------------------------------------------------
 	jsr InitPlayer
 
 ; Screen mode and other configs -----------------------------------------------
